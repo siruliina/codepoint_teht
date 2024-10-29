@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="author" content="Siru-Liina Karlin">
+        <meta name="description" content="Tehtävä 2: Lempparit">
+        <meta name="keywords" content="HTML, CSS">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Uusi elokuva</title>
+        <link rel="stylesheet" href="lempparit_style.css"/>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="index.html">Takaisin</a>
+            </nav>
+        </header>
+
+        <h1>Lisää uusi elokuva</h1>
+
+        <div class="form_wrapper">
+            <form id="movie_form">
+                <label for="nimi">Nimi:</label>
+                <input type="text" name="nimi" id="nimi"/>
+
+                <label for="ohjaaja">Ohjaaja:</label>
+                <input type="text" name="ohjaaja" id="ohjaaja"/><br/>
+
+                <label for="julkaisija">Julkaisija:</label>
+                <input type="text" name="julkaisija" id="julkaisija"/>
+
+                <label for="julkaisupäivä">Julkaisupäivä:</label>
+                <input type="date" name="julkaisupäivä" id="julkaisupäivä"/><br/>
+
+                <label for="julkaisumaa">Julkaisumaa:</label>
+                <select name="julkaisumaa" id="julkaisumaa">
+                    <option value="" disabled selected>Julkaisumaa</option>
+                    <option value="Yhdysvallat">Yhdysvallat</option>
+                    <option value="Iso-Britannia">Iso-Britannia</option>
+                    <option value="Suomi">Suomi</option>
+                    <option value="Uusi-Seelanti">Uusi-Seelanti</option>
+                    <option value="Ruotsi">Ruotsi</option>
+                </select><br/>
+
+                <label for="genre">Genre:</label>
+
+                <input type="radio" id="fantasia" name="genre"/>
+                <label for="fantasia"> Fantasia</label>
+
+                <input type="radio" id="toiminta" name="genre"/>
+                <label for="toiminta"> Toiminta</label>
+
+                <input type="radio" id="anime" name="genre"/>
+                <label for="anime"> Anime</label>
+
+                <input type="radio" id="romantiikka" name="genre"/>
+                <label for="romantiikka"> Romantiikka</label><br/>
+                
+                <label for="synopsis">Synopsis:</label>
+                <textarea name="synopsis" id="synopsis" rows="5" cols="33">Kirjoita synopsis tähän...
+                </textarea><br/>
+                
+                <label for="arvostelu">Arvostelu:</label>
+                <input type="number" name="arvostelu" id="arvostelu"/>
+
+                
+                <input type="checkbox" id="katsottu" name="katsottu" value="katsottu"/>
+                <label for="katsottu"> Katsottu</label><br/>
+
+                <input type="submit" value="OK">
+            </form>
+
+            <div id="movie_card" style="display: none;">
+                <h2><span id="movie_name"></span></h2>
+            </div>
+        </div>
+        <footer>
+            <p>Author: Siru-Liina Karlin</p>
+            <p><a href="mailto:siru-liina.karlin@turku.fi">siru-liina.karlin@turku.fi</a></p>
+        </footer>
+    </body>
+</html>
