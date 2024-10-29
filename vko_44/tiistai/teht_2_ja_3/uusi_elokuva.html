@@ -34,7 +34,7 @@
 
                 <label for="julkaisumaa">Julkaisumaa:</label>
                 <select name="julkaisumaa" id="julkaisumaa">
-                    <option value="" disabled selected>Julkaisumaa</option>
+                    <option value="" disabled selected>Valitse maa</option>
                     <option value="Yhdysvallat">Yhdysvallat</option>
                     <option value="Iso-Britannia">Iso-Britannia</option>
                     <option value="Suomi">Suomi</option>
@@ -42,26 +42,25 @@
                     <option value="Ruotsi">Ruotsi</option>
                 </select><br/>
 
-                <label for="genre">Genre:</label>
+                <div class="radio-group">
+                    <input type="radio" id="fantasia" name="genre" value="fantasia" checked/>
+                    <label for="fantasia"> Fantasia</label>
 
-                <input type="radio" id="fantasia" name="genre"/>
-                <label for="fantasia"> Fantasia</label>
+                    <input type="radio" id="toiminta" name="genre" value="toiminta"/>
+                    <label for="toiminta"> Toiminta</label>
 
-                <input type="radio" id="toiminta" name="genre"/>
-                <label for="toiminta"> Toiminta</label>
+                    <input type="radio" id="anime" name="genre" value="anime"/>
+                    <label for="anime"> Anime</label>
 
-                <input type="radio" id="anime" name="genre"/>
-                <label for="anime"> Anime</label>
-
-                <input type="radio" id="romantiikka" name="genre"/>
-                <label for="romantiikka"> Romantiikka</label><br/>
+                    <input type="radio" id="romantiikka" name="genre" value="romantiikka"/>
+                    <label for="romantiikka"> Romantiikka</label><br/>
+                </div>
                 
                 <label for="synopsis">Synopsis:</label>
-                <textarea name="synopsis" id="synopsis" rows="5" cols="33">Kirjoita synopsis tähän...
-                </textarea><br/>
+                <textarea name="synopsis" id="synopsis" rows="5" cols="33" placeholder="Kirjoita synopsis tähän..."></textarea><br/>
                 
                 <label for="arvostelu">Arvostelu:</label>
-                <input type="number" name="arvostelu" id="arvostelu"/>
+                <input type="number" name="arvostelu" id="arvostelu" max="5" min="1"/>
 
                 
                 <input type="checkbox" id="katsottu" name="katsottu" value="katsottu"/>
@@ -70,13 +69,52 @@
                 <input type="submit" value="OK">
             </form>
 
-            <div id="movie_card" style="display: none;">
-                <h2><span id="movie_name"></span></h2>
-            </div>
+            <div id="card_container"></div>
         </div>
         <footer>
             <p>Author: Siru-Liina Karlin</p>
             <p><a href="mailto:siru-liina.karlin@turku.fi">siru-liina.karlin@turku.fi</a></p>
         </footer>
     </body>
+
+    <script>
+        document.getElementById("movie_form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const nimi = document.getElementById("nimi").value;
+            const ohjaaja = document.getElementById("ohjaaja").value;
+            const katsottu = document.getElementById("katsottu").checked;
+            const julkaisumaa = document.getElementById("julkaisumaa").value;
+            const julkaisupäivä = document.getElementById("julkaisupäivä").value;
+            
+            const genreElements = document.getElementsByName("genre");
+            let genre = "";
+            for (let i = 0; i < genreElements.length; i++) {
+                if (genreElements[i].checked) {
+                    genre = genreElements[i].value;
+                    break;
+                }
+            }
+
+            const arvostelu = document.getElementById("arvostelu").value;
+            const synopsis = document.getElementById("synopsis").value;
+
+            const stars = "★".repeat(arvostelu) + "☆".repeat(5 - arvostelu);
+            const checkboxIcon = katsottu ? "☑" : "☐";
+
+            const card_html = `
+                <div class="card">
+                    <h2>${nimi}</h2> <div>${checkboxIcon}</div>
+                    <h3>${ohjaaja}</h3>
+                    <p>${julkaisumaa} - ${julkaisupäivä} - ${genre}</p>
+                    <p>${stars}</p>
+                    <p>${synopsis}</p>
+                </div>
+            `;
+
+            document.getElementById("card_container").innerHTML = card_html;
+
+            document.getElementById("movie_form").reset();
+        })
+    </script>
 </html>

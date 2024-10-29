@@ -62,3 +62,31 @@ footer {
 img {
     max-width: 100%; 
 }
+
+.form_wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.card {
+    border: 2px solid black;
+}
+
+#movie_form label,
+#movie_form input,
+#movie_form select,
+#movie_form textarea {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    width: 100%
+}
+
+#movie_form label {
+    text-align: left;
+}
