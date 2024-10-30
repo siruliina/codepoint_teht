@@ -10,24 +10,26 @@
         <link rel="stylesheet" href="lempparit_style.css"/>
     </head>
     <body>
-        <header>
-            <nav>
-                <a href="index.html">Takaisin</a>
-            </nav>
-        </header>
-
-        <h1>Lisää uusi elokuva</h1>
-
         <div class="form_wrapper">
+            <header>
+                <nav>
+                    <a href="index.html">Takaisin</a>
+                </nav>
+            </header>
+
+            
+
+            
             <form id="movie_form">
+                <h1>Lisää uusi elokuva</h1>
                 <label for="nimi">Nimi:</label>
-                <input type="text" name="nimi" id="nimi"/>
+                <input type="text" name="nimi" id="nimi"/><br/>
 
                 <label for="ohjaaja">Ohjaaja:</label>
                 <input type="text" name="ohjaaja" id="ohjaaja"/><br/>
 
                 <label for="julkaisija">Julkaisija:</label>
-                <input type="text" name="julkaisija" id="julkaisija"/>
+                <input type="text" name="julkaisija" id="julkaisija"/><br/>
 
                 <label for="julkaisupäivä">Julkaisupäivä:</label>
                 <input type="date" name="julkaisupäivä" id="julkaisupäivä"/><br/>
@@ -53,8 +55,8 @@
                     <label for="anime"> Anime</label>
 
                     <input type="radio" id="romantiikka" name="genre" value="romantiikka"/>
-                    <label for="romantiikka"> Romantiikka</label><br/>
-                </div>
+                    <label for="romantiikka"> Romantiikka</label>
+                </div><br/>
                 
                 <label for="synopsis">Synopsis:</label>
                 <textarea name="synopsis" id="synopsis" rows="5" cols="33" placeholder="Kirjoita synopsis tähän..."></textarea><br/>
@@ -70,11 +72,11 @@
             </form>
 
             <div id="card_container"></div>
+            <footer id="form_footer">
+                <p>Author: Siru-Liina Karlin</p>
+                <p><a href="mailto:siru-liina.karlin@turku.fi">siru-liina.karlin@turku.fi</a></p>
+            </footer>
         </div>
-        <footer>
-            <p>Author: Siru-Liina Karlin</p>
-            <p><a href="mailto:siru-liina.karlin@turku.fi">siru-liina.karlin@turku.fi</a></p>
-        </footer>
     </body>
 
     <script>
@@ -83,6 +85,7 @@
 
             const nimi = document.getElementById("nimi").value;
             const ohjaaja = document.getElementById("ohjaaja").value;
+            const julkaisija = document.getElementById("julkaisija").value;
             const katsottu = document.getElementById("katsottu").checked;
             const julkaisumaa = document.getElementById("julkaisumaa").value;
             const julkaisupäivä = document.getElementById("julkaisupäivä").value;
@@ -104,11 +107,13 @@
 
             const card_html = `
                 <div class="card">
-                    <h2>${nimi}</h2> <div>${checkboxIcon}</div>
-                    <h3>${ohjaaja}</h3>
-                    <p>${julkaisumaa} - ${julkaisupäivä} - ${genre}</p>
-                    <p>${stars}</p>
-                    <p>${synopsis}</p>
+                    <div>
+                        <h2>${nimi}</h2><span>${checkboxIcon}</span>
+                    </div>
+                    <p style="font-size: 16px;">${ohjaaja}<br/>${julkaisija}</p>
+                    <p id="info">${julkaisumaa} - ${julkaisupäivä} - ${genre}</p>
+                    <p id="stars">${stars}</p>
+                    <p id="synopsis">${synopsis}</p>
                 </div>
             `;
 
