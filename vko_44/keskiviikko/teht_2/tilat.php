@@ -1,6 +1,7 @@
 <?php
     include "yhteys_tietokantaan.php";
 
+    // Tilan lisäys
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add"])) {
         $nimi = $_POST["nimi"];
         $sql_insert = "INSERT INTO tilat (tilan_nimi) VALUES (:nimi)";
@@ -9,6 +10,7 @@
         $query_insert->execute();
     }
 
+    // Tilan poisto
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete"])) {
         $id = $_POST["id"];
         $sql_delete = "DELETE FROM tilat WHERE id = :id";

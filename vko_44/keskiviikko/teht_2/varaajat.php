@@ -1,16 +1,17 @@
 <?php
     include "yhteys_tietokantaan.php";
 
+    // Varaajan lisäys
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
         $nimi = $_POST['nimi'];
 
-        // Lisää varaaja tietokantaan
         $sql_insert = "INSERT INTO varaajat (nimi) VALUES (:nimi)";
         $query_insert = $yhteys->prepare($sql_insert);
         $query_insert->bindParam(':nimi', $nimi);
         $query_insert->execute();
     }
 
+    // Varaajan poisto
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
         $id = $_POST['id'];
         $sql_delete = "DELETE FROM varaajat WHERE id = :id";

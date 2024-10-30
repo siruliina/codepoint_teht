@@ -15,10 +15,11 @@
     </head>
     <body>
         <h1>Tilavaraus</h1>
-        <nav>
-            <a href="varaajat.php">Varaajat</a>
-            <a href="tilat.php">Tilat</a>
-            <a href="varaukset.php">Varaukset</a>
+        <nav id="front-page-nav">
+            <a href="varaajat.php">Varaajat</a><br/>
+            <a href="tilat.php">Tilat</a><br/>
+            <a href="varaukset.php">Varaukset</a><br/>
         </nav>
+        <img src="https://cdn.pixabay.com/photo/2020/07/08/04/12/work-5382501_1280.jpg"/>
     </body>
 </html>

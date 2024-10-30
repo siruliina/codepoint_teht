@@ -93,7 +93,7 @@
 
         <section>
             <h2>Kaikki varaukset</h2>
-            <table>
+            <table id="kaikki-varaukset">
                 <tr>
                     <th>Päivä</th>
                     <th>Tila</th>
