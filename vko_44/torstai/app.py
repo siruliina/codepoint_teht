@@ -7,6 +7,7 @@ cursor = conn.cursor()
 # ON DELETE CASCADE ei toimi sqlitellä ilman alla olevaa käskyä
 cursor.execute('PRAGMA foreign_keys = ON;')
 
+# Luodaan tablet
 cursor.execute(''' CREATE TABLE IF NOT EXISTS varaajat (
         varaaja_id INTEGER PRIMARY KEY AUTOINCREMENT,
         nimi TEXT NOT NULL
@@ -29,7 +30,7 @@ cursor.execute(''' CREATE TABLE IF NOT EXISTS varaukset (
     );
 ''')
 
-# Varaajat
+# Varaajiin liittyvät funktiot
 def nayta_varaajat():
     cursor.execute('''
         SELECT * FROM varaajat;
@@ -42,21 +43,27 @@ def nayta_varaajat():
     else: 
         print("No rows in table.")
         
-def lisaa_varaaja(nimi):
+def lisaa_varaaja():
+    nimi = input("Mikä on varaajan nimi?: ")
+
     cursor.execute('''
         INSERT INTO varaajat (nimi) VALUES (?);
     ''', (nimi,))
 
     conn.commit()
 
-def poista_varaaja(id):
+def poista_varaaja():
+    nayta_varaajat()
+
+    id = int(input("Kirjoita sen varaajan id, jonka haluat poistaa: "))
+
     cursor.execute('''
         DELETE FROM varaajat WHERE varaaja_id=?;
     ''', (id,))
 
     conn.commit()
 
-# Tilat
+# Tiloihin liittyvät funktiot
 def nayta_tilat():
     cursor.execute('''
         SELECT * FROM tilat;
@@ -69,21 +76,27 @@ def nayta_tilat():
     else: 
         print("No rows in table.") 
 
-def lisaa_tila(nimi):
+def lisaa_tila():
+    nimi = input("Mikä on tilan nimi?: ")
+
     cursor.execute('''
         INSERT INTO tilat (nimi) VALUES (?);
     ''', (nimi,))
 
     conn.commit()
 
-def poista_tila(id):
+def poista_tila():
+    nayta_tilat()
+
+    id = int(input("Kirjoita sen tilan id, jonka haluat poistaa: "))
+
     cursor.execute('''
         DELETE FROM tilat WHERE tila_id=?;
     ''', (id,))
 
     conn.commit()
 
-# Varaukset
+# Varauksiin liittyvät funktiot
 def nayta_varaukset():
     cursor.execute('''
         SELECT varaukset.varaus_id, varaukset.varauspaiva, varaajat.nimi, tilat.nimi
@@ -99,7 +112,13 @@ def nayta_varaukset():
     else: 
         print("No rows in table.")
 
-def lisaa_varaus(varauspaiva, varaaja, tila):
+def lisaa_varaus():
+    varauspaiva = input("Mikä on varauksen päivä? (YYYY-MM-DD): ")
+    nayta_varaajat()
+    varaaja = int(input("Mikä on varaajan id?: "))
+    nayta_tilat()
+    tila = int(input("Mikä on tilan id?: "))
+
     cursor.execute('''
         INSERT INTO varaukset (varauspaiva, varaaja, tila) 
         VALUES (?, ?, ?);
@@ -107,12 +126,17 @@ def lisaa_varaus(varauspaiva, varaaja, tila):
 
     conn.commit() 
 
-def poista_varaus(id):
+def poista_varaus():
+    nayta_varaukset()
+
+    id = int(input("Kirjoita sen varauksen id, jonka haluat poistaa: "))
+
     cursor.execute('''
         DELETE FROM varaukset WHERE varaus_id=?;
     ''', (id,))
 
     conn.commit()
+
 
 def main():
     print("Tervetuloa tilavaraukseen!")
@@ -130,6 +154,7 @@ def main():
             9: poistaa varauksen
             10: poistu""")
 
+        # Varmistetaan, että syötteenä voi antaa vain integerejä
         try:
             toiminto = int(input("Kirjoita haluamaasi toimintoa vastaava numero tähän: "))
         except ValueError:
@@ -139,29 +164,21 @@ def main():
         if toiminto == 1:
             nayta_varaajat()
         elif toiminto == 2:
-            nimi = input("Mikä on varaajan nimi?: ")
-            lisaa_varaaja(nimi)
+            lisaa_varaaja()
         elif toiminto == 3:
-            id = int(input("Kirjoita sen varaajan id, jonka haluat poistaa: "))
-            poista_varaaja(id)
+            poista_varaaja()
         elif toiminto == 4:
             nayta_tilat()
         elif toiminto == 5:
-            nimi = input("Mikä on tilan nimi?: ")
-            lisaa_tila(nimi)
+            lisaa_tila()
         elif toiminto == 6:
-            id = int(input("Kirjoita sen tilan id, jonka haluat poistaa: "))
-            poista_tila(id)
+            poista_tila()
         elif toiminto == 7:
             nayta_varaukset()
         elif toiminto == 8:
-            varauspaiva = input("Mikä on varauksen päivä?: ")
-            varaaja_id = int(input("Mikä on varaajan id?: "))
-            tila_id = int(input("Mikä on tilan id?: "))
-            lisaa_varaus(varauspaiva, varaaja_id, tila_id)
+            lisaa_varaus()
         elif toiminto == 9:
-            id = int(input("Kirjoita sen varauksen id, jonka haluat poistaa: "))
-            poista_varaus(id)
+            poista_varaus()
         elif toiminto == 10:
             print("Kiitos ja tervetuloa uudestaan!")
             break
