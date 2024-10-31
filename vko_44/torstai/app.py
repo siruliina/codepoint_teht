@@ -1,5 +1,6 @@
 import sqlite3 
-from tabulate import tabulate 
+from tabulate import tabulate
+import re
 
 conn = sqlite3.connect('tilavaraus.db') 
 cursor = conn.cursor() 
@@ -113,18 +114,28 @@ def nayta_varaukset():
         print("No rows in table.")
 
 def lisaa_varaus():
-    varauspaiva = input("Mikä on varauksen päivä? (YYYY-MM-DD): ")
-    nayta_varaajat()
-    varaaja = int(input("Mikä on varaajan id?: "))
-    nayta_tilat()
-    tila = int(input("Mikä on tilan id?: "))
+    while True:
+        varauspaiva = input("Mikä on varauksen päivä? (YYYY-MM-DD): ")
+        regex = r'^([2-9][0-9]{3})-([0][1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1])$'
 
-    cursor.execute('''
-        INSERT INTO varaukset (varauspaiva, varaaja, tila) 
-        VALUES (?, ?, ?);
-    ''', (varauspaiva, varaaja, tila,))
+        is_valid = re.search(regex, varauspaiva)
 
-    conn.commit() 
+        if is_valid:
+            nayta_varaajat()
+            varaaja = int(input("Mikä on varaajan id?: "))
+            nayta_tilat()
+            tila = int(input("Mikä on tilan id?: "))
+
+            cursor.execute('''
+                INSERT INTO varaukset (varauspaiva, varaaja, tila) 
+                VALUES (?, ?, ?);
+            ''', (varauspaiva, varaaja, tila,))
+
+            conn.commit()
+            break
+        else:
+            print("Syötteesi ei vastannut tarvittua muotoa. Yritä uudelleen.")
+            continue
 
 def poista_varaus():
     nayta_varaukset()
