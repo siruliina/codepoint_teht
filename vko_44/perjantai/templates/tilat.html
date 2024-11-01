@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Siru-Liina Karlin">
+        <meta name="description" content="Tilanvarausjärjestelmä: MySQL, Python, HTML">
+        <meta name="keywords" content="MySQL, Python, HTML">
+        <title>Tilat</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='tilavaraus.css') }}"/>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="/">Etusivu</a>
+                <a href="/varaajat">Varaajat</a>
+                <a href="/tilat">Tilat</a>
+                <a href="/varaukset">Varaukset</a>
+            </nav>
+            <h1>Tilanvarausjärjestelmä</h1>
+        </header>
+        <h2>Tilat</h2>
+        <section>
+            <h3>Lisää tila</h3>
+            <form action="{{ url_for('lisaa_tila') }}" method="POST">
+                <label for="tilan_nimi">Nimi</label>
+                <input type="text" name="tilan_nimi" id="tilan_nimi" />
+
+                <input type="submit" value="Lisää tila" />
+            </form>
+        </section>
+        <section>
+            <h3>Kaikki tilat</h3>
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Nimi</th>
+                    <th></th>
+                </tr>
+                {% for tila in tilat %}
+                <tr>
+                    <td>{{ tila["id"] }}</td>
+                    <td>{{ tila["tilan_nimi"] }}</td>
+                    <td>
+                        <form action="{{ url_for('poista_tila') }}" method="POST">
+                            <input type="hidden" name="id" value="{{ tila['id'] }}" />
+                            <input type="submit" value="X" />
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </section>
+    </body>
+</html>

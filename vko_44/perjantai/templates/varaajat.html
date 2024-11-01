@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Siru-Liina Karlin">
+        <meta name="description" content="Tilanvarausjärjestelmä: MySQL, Python, HTML">
+        <meta name="keywords" content="MySQL, Python, HTML">
+        <title>Varaajat</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='tilavaraus.css') }}"/>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="/">Etusivu</a>
+                <a href="/varaajat">Varaajat</a>
+                <a href="/tilat">Tilat</a>
+                <a href="/varaukset">Varaukset</a>
+            </nav>
+            <h1>Tilanvarausjärjestelmä</h1>
+        </header>
+        <h2>Varaajat</h2>
+        <section>
+            <h3>Lisää varaaja</h3>
+            <form action="{{ url_for('lisaa_varaaja') }}" method="POST">
+                <label for="nimi">Nimi</label>
+                <input type="text" name="nimi" id="nimi" />
+
+                <input type="submit" value="Lisää varaaja" />
+            </form>
+        </section>
+        <section>
+            <h3>Kaikki varaajat</h3>
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Nimi</th>
+                    <th></th>
+                </tr>
+                {% for varaaja in varaajat %}
+                <tr>
+                    <td>{{ varaaja["id"] }}</td>
+                    <td>{{ varaaja["nimi"] }}</td>
+                    <td>
+                        <form action="{{ url_for('poista_varaaja') }}" method="POST">
+                            <input type="hidden" name="id" value="{{ varaaja['id'] }}" />
+                            <input type="submit" value="X" />
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </section>
+    </body>
+</html>

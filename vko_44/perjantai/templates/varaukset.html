@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Siru-Liina Karlin">
+        <meta name="description" content="Tilanvarausjärjestelmä: MySQL, Python, HTML">
+        <meta name="keywords" content="MySQL, Python, HTML">
+        <title>Varaukset</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='tilavaraus.css') }}"/>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="/">Etusivu</a>
+                <a href="/varaajat">Varaajat</a>
+                <a href="/tilat">Tilat</a>
+                <a href="/varaukset">Varaukset</a>
+            </nav>
+            <h1>Tilanvarausjärjestelmä</h1>
+        </header>
+        <h2>Varaukset</h2>
+        <section>
+            <h3>Lisää varaus</h3>
+            <form action="{{ url_for('lisaa_varaus') }}" method="POST">
+                <label for="varauspaiva">Varauspäivä</label>
+                <input type="date" name="varauspaiva" id="varauspaiva" />
+
+                <label for="varaaja">Varaaja</label>
+                <select name="varaaja" id="varaaja">
+                    <option value="" disabled selected>Valitse varaaja</option>
+                    {% for varaaja in varaajat %}
+                    <option value="{{ varaaja['id'] }}">{{ varaaja["nimi"] }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="tila">Tila</label>
+                <select name="tila" id="tila">
+                    <option value="" disabled selected>Valitse tila</option>
+                    {% for tila in tilat %}
+                    <option value="{{ tila['id'] }}">{{ tila["tilan_nimi"] }}</option>
+                    {% endfor %}
+                </select>
+
+                <input type="submit" value="Lisää varaus" />
+            </form>
+        </section>
+        <section>
+            <h3>Kaikki varaukset</h3>
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Varauspaiva</th>
+                    <th>Varaaja</th>
+                    <th>Tila</th>
+                    <th></th>
+                </tr>
+                {% for varaus in varaukset %}
+                <tr>
+                    <td>{{ varaus["id"] }}</td>
+                    <td>{{ varaus["varauspaiva"] }}</td>
+                    <td>{{ varaus["nimi"] }}</td>
+                    <td>{{ varaus["tilan_nimi"] }}</td> 
+                    <td>
+                        <form action="{{ url_for('poista_varaus') }}" method="POST" style="display: inline">
+                            <input type="hidden" name="id" value="{{ varaus['id'] }}" />
+                            <input type="submit" value="X" />
+                        </form>
+                    </td>                 
+                </tr>
+                {% endfor %}
+            </table>
+        </section>
+    </body>
+</html>
