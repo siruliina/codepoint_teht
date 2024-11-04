@@ -248,43 +248,10 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             cursor.close()
             connection.close()           
 
-    '''       elif self.path == "/poista-tila":
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length).decode('utf-8')
-            tila_id = urllib.parse.parse_qs(post_data)["id"][0]
-
-            connection = db_yhteys()
-            cursor = connection.cursor()
-            cursor.execute("DELETE FROM tilat WHERE id = %s", (tila_id,))
-            connection.commit()
-            cursor.close()
-            connection.close()
-
-            self.send_response(303)
-            self.send_header('Location', '/tilat')
-            self.end_headers()'''
-
-    '''  
-
-        elif self.path == "/poista-varaus":
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length).decode('utf-8')
-            varaus_id = urllib.parse.parse_qs(post_data)["id"][0]
-
-            connection = db_yhteys()
-            cursor = connection.cursor()
-            cursor.execute("DELETE FROM varaukset WHERE id = %s", (varaus_id,))
-            connection.commit()
-            cursor.close()
-            connection.close()
-
-            self.send_response(303)
-            self.send_header('Location', '/varaukset')
-            self.end_headers()
-    '''
     def do_DELETE(self):
+        # Varaajan poistaminen
         if "/varaajat/" in self.path:
-            varaaja_id = self.path.split("/")[-1] # Otetaan id polusta
+            varaaja_id = int(self.path.split("/")[-1]) # Otetaan id polusta
             connection = db_yhteys()
             cursor = connection.cursor()
             cursor.execute("DELETE FROM varaajat WHERE id = %s", (varaaja_id,))
@@ -295,11 +262,25 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             self.send_response(204)
             self.end_headers()
 
-        if "/tilat/" in self.path:
-            tila_id = self.path.split("/")[-1]
+        # Tilan poistaminen
+        elif "/tilat/" in self.path:
+            tila_id = int(self.path.split("/")[-1])
             connection = db_yhteys()
             cursor = connection.cursor()
             cursor.execute("DELETE FROM tilat WHERE id = %s", (tila_id,))
+            connection.commit()
+            cursor.close()
+            connection.close()
+
+            self.send_response(204)
+            self.end_headers()
+        
+        # Varauksen poistaminen
+        elif "/varaukset/" in self.path:
+            varaus_id = int(self.path.split("/")[-1])
+            connection = db_yhteys()
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM varaukset WHERE id = %s", (varaus_id,))
             connection.commit()
             cursor.close()
             connection.close()
