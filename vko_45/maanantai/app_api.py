@@ -159,6 +159,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(b"404 - Not Found")
 
     def do_POST(self):
+        # Uuden varaajan lisäys
         if self.path == "/varaajat":
             # Content-Length kertoo kuinka monta tavua POST pyynnössä on
             content_length = int(self.headers['Content-Length'])
@@ -167,52 +168,85 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             post_data = self.rfile.read(content_length).decode('utf-8')
             # urllib.parse.parse_qs() muuttaa post_datan sanakirjaksi
             # Haetaan avaimen varaaja_nimi arvo (lista) ja otetaan ensimmäinen arvo
-            varaaja_nimi = urllib.parse.parse_qs(post_data)["varaaja_nimi"][0]
+            varaaja_data = json.loads(post_data)
+            varaaja_nimi = varaaja_data.get("nimi")
 
             connection = db_yhteys()
             cursor = connection.cursor()
             cursor.execute("INSERT INTO varaajat (nimi) VALUES (%s)", (varaaja_nimi,))
             connection.commit()
-            cursor.close()
-            connection.close()
-
-            # 303 kertoo että pyyntö on käsitelty ja asiakkaan tulee siirtyä toiseen osoitteeseen
-            self.send_response(303)
-            # Uudelleenohjataan selain osoitteeseen /varaajat
-            self.send_header('Location', '/varaajat')
+            
+            self.send_response(201)  # 201 Created
+            self.send_header('Content-Type', 'application/json')
             self.end_headers()
+            
+            uusi_varaaja = {
+                "id": cursor.lastrowid,
+                "nimi": varaaja_nimi
+            }
 
-    '''        elif self.path == "/poista-varaaja":
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length).decode('utf-8')
-            varaaja_id = urllib.parse.parse_qs(post_data)["id"][0]
+            self.wfile.write(json.dumps(uusi_varaaja).encode("utf-8"))
 
-            connection = db_yhteys()
-            cursor = connection.cursor()
-            cursor.execute("DELETE FROM varaajat WHERE id = %s", (varaaja_id,))
-            connection.commit()
             cursor.close()
             connection.close()
 
-            self.send_response(303)
-            self.send_header('Location', '/varaajat')
-            self.end_headers()'''
-
-    '''        elif self.path == "/lisaa-tila":
+        # Uuden tilan lisäys
+        elif self.path == "/tilat":
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length).decode('utf-8')
-            tilan_nimi = urllib.parse.parse_qs(post_data)["tilan_nimi"][0]
+            tila_data = json.loads(post_data)
+            tilan_nimi = tila_data.get("tilan_nimi")
 
             connection = db_yhteys()
             cursor = connection.cursor()
             cursor.execute("INSERT INTO tilat (tilan_nimi) VALUES (%s)", (tilan_nimi,))
             connection.commit()
+
+            self.send_response(201)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            
+            uusi_tila = {
+                "id": cursor.lastrowid,
+                "tilan_nimi": tilan_nimi
+            }
+            
+            self.wfile.write(json.dumps(uusi_tila).encode("utf-8"))
+
             cursor.close()
             connection.close()
 
-            self.send_response(303)
-            self.send_header('Location', '/tilat')
-            self.end_headers()'''
+        # Uuden varauksen lisäys
+        elif self.path == "/varaukset":
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            varaus_data = json.loads(post_data)
+            varauspaiva = varaus_data.get("varauspaiva")
+            tila = varaus_data.get("tila")
+            varaaja = varaus_data.get("varaaja")
+
+            connection = db_yhteys()
+            cursor = connection.cursor()
+            cursor.execute('''
+                INSERT INTO varaukset (varauspaiva, varaaja, tila) 
+                VALUES (%s, %s, %s);
+            ''', (varauspaiva, varaaja, tila,))
+
+            connection.commit()
+            self.send_response(201)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+
+            uusi_varaus = {
+                "id": cursor.lastrowid,
+                "varauspaiva": varauspaiva,
+                "varaaja": varaaja,
+                "tila": tila
+            }
+            self.wfile.write(json.dumps(uusi_varaus).encode("utf-8"))
+            
+            cursor.close()
+            connection.close()           
 
     '''       elif self.path == "/poista-tila":
             content_length = int(self.headers['Content-Length'])
@@ -230,26 +264,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             self.send_header('Location', '/tilat')
             self.end_headers()'''
 
-    '''        elif self.path == "/lisaa-varaus":
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length).decode('utf-8')
-            varauspaiva = urllib.parse.parse_qs(post_data)["varauspaiva"][0]
-            varaaja = urllib.parse.parse_qs(post_data)["varaaja"][0]
-            tila = urllib.parse.parse_qs(post_data)["tila"][0]
-
-            connection = db_yhteys()
-            cursor = connection.cursor()
-            cursor.execute(''
-                INSERT INTO varaukset (varauspaiva, varaaja, tila) 
-                VALUES (%s, %s, %s);
-            '', (varauspaiva, varaaja, tila,))
-            connection.commit()
-            cursor.close()
-            connection.close()
-
-            self.send_response(303)
-            self.send_header('Location', '/varaukset')
-            self.end_headers()
+    '''  
 
         elif self.path == "/poista-varaus":
             content_length = int(self.headers['Content-Length'])
