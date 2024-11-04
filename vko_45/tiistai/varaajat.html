@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Varaajat</title>
+    <script defer src="./node_modules/axios/dist/axios.min.js"></script>
+    <script defer src="index.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">Etusivu</a>
+            <a href="varaajat.html">Varaajat</a>
+            <a href="tilat.html">Tilat</a>
+            <a href="varaukset.html">Varaukset</a>
+        </nav>
+        <h1>Tilanvarausjärjestelmä</h1>
+    </header>
+
+    <h2>Varaajat</h2>
+
+    <section>
+        <h3>Lisää varaaja</h3>
+    </section>
+
+    <section>
+        <h3>Kaikki varaajat</h3>
+        <table id="varaaja-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nimi</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <button onclick="getVaraajat()">Hae tiedot</button>
+    </section>
+</body>
+</html>

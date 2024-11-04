@@ -29,6 +29,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             self.send_response(200)
             # Selaimelle tieto, että data tulee html muodossa
             self.send_header("Content-type", "application/json")
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
 
             # Yhteys tietokantaan
@@ -52,6 +53,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
         elif self.path.startswith("/varaajat/"):
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             
             varaaja_id = int(self.path.split("/")[-1]) # Otetaan id polusta
@@ -71,6 +73,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
         elif self.path == "/tilat":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
 
             connection = db_yhteys()
@@ -88,6 +91,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
         elif self.path.startswith("/tilat/"):
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             
             tila_id = int(self.path.split("/")[-1])
@@ -105,6 +109,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
         elif self.path == "/varaukset":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
 
             connection = db_yhteys()
@@ -130,6 +135,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
         elif self.path.startswith("/varaukset/"):
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             
             varaus_id = int(self.path.split("/")[-1])
@@ -178,6 +184,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             
             self.send_response(201)  # 201 Created
             self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             
             uusi_varaaja = {
@@ -204,6 +211,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
 
             self.send_response(201)
             self.send_header("Content-Type", "application/json")
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             
             uusi_tila = {
@@ -235,6 +243,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             connection.commit()
             self.send_response(201)
             self.send_header("Content-type", "application/json")
+            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
 
             uusi_varaus = {

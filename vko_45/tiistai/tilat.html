@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tilat</title>
+    <script defer src="./node_modules/axios/dist/axios.min.js"></script>
+    <script defer src="index.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">Etusivu</a>
+            <a href="varaajat.html">Varaajat</a>
+            <a href="tilat.html">Tilat</a>
+            <a href="varaukset.html">Varaukset</a>
+        </nav>
+        <h1>Tilanvarausjärjestelmä</h1>
+    </header>
+
+    <h2>Tilat</h2>
+
+    <section>
+        <h3>Lisää tila</h3>
+    </section>
+
+    <section>
+        <h3>Kaikki tilat</h3>
+        <table id="tila-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nimi</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <button onclick="getTilat()">Hae tilat</button>
+    </section>
+</body>
+</html>
