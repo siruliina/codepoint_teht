@@ -6,6 +6,9 @@ function getVaraajat() {
             createVaraajaTable(response.data)
             createVaraajaDropdown(response.data)
         })
+        .catch(error => {
+            console.error(`Virhe hakiessa varaajia:`, error)
+        })
 }
 
 function createVaraajaTable(varaajat) {
@@ -36,6 +39,9 @@ function createVaraajaTable(varaajat) {
             varaaja_table.appendChild(row)
         }
     }
+    else {
+        console.error('varaaja_table ei löytynyt')
+    }
 }
 
 function createVaraajaDropdown(varaajat) {
@@ -48,7 +54,11 @@ function createVaraajaDropdown(varaajat) {
             option.value = varaaja.id
             option.textContent = varaaja.nimi
             varaajat_dropdown.appendChild(option)
-        }}
+        }
+    }
+    else {
+        console.error('varaajat_dropdown ei löytynyt')
+    }
 }
 
 function addVaraaja(event) {
@@ -65,6 +75,9 @@ function addVaraaja(event) {
         console.log('Varaaja lisätty onnistuneesti:', response.data)
         getVaraajat()
     })
+    .catch(error => {
+        console.error(`Virhe lisätessä varaajaa ${varaaja}:`, error)
+    })
 
     return false
 }
@@ -75,6 +88,9 @@ function deleteVaraaja(varaaja_id) {
             console.log(`Varaaja ${varaaja_id} poistettiin onnistuneesti`)
             getVaraajat()
         })
+        .catch(error => {
+            console.error(`Virhe poistettaessa varaajaa ${varaaja_id}:`, error)
+        })
 }
 
 // Tilat
@@ -84,6 +100,9 @@ function getTilat() {
             console.log('Tilat:', response.data)
             createTilaTable(response.data)
             createTilaDropdown(response.data)
+        })
+        .catch(error => {
+            console.error(`Virhe hakiessa tiloja:`, error)
         })
 }
 
@@ -116,6 +135,9 @@ function createTilaTable(tilat) {
             tila_table.appendChild(row)
         }
     }
+    else {
+        console.error('tila_table ei löytynyt')
+    }
 }
 
 function createTilaDropdown(tilat) {
@@ -130,6 +152,9 @@ function createTilaDropdown(tilat) {
             option.textContent = tila.tilan_nimi
             tilat_dropdown.appendChild(option)
         }
+    }
+    else {
+        console.error('tilat_dropdown ei löytynyt')
     }
 }
 
@@ -147,6 +172,9 @@ function addTila(event) {
             console.log('Tila lisätty onnistuneesti:', response.data)
             getTilat()
         })
+        .catch(error => {
+            console.error(`Virhe lisätessä tilaa ${tila}:`, error)
+        })
     
     return false
 }
@@ -157,6 +185,9 @@ function deleteTila(tila_id) {
             console.log(`Tila ${tila_id} poistettiin onnistuneesti`)
             getTilat()
         })
+        .catch(error => {
+            console.error(`Virhe poistettaessa tilaa ${tila_id}:`, error)
+        })
 }
 
 // Varaukset
@@ -165,6 +196,9 @@ function getVaraukset() {
         .then(response => {
             console.log('Varaukset:', response.data)
             createVarausTable(response.data)
+        })
+        .catch(error => {
+            console.error(`Virhe hakiessa varauksia:`, error)
         })
 }
 
@@ -204,7 +238,10 @@ function createVarausTable(varaukset) {
 
             varaus_table.appendChild(row)
         }
-    }   
+    }
+    else {
+        console.error('varaus_table ei löytynyt')
+    }
 }
 
 function addVaraus(event) {
@@ -225,6 +262,9 @@ function addVaraus(event) {
             console.log('Varaus lisättiin onnistuneesti', response.data)
             getVaraukset()
         })
+        .catch(error => {
+            console.error(`Virhe lisätessä varausta ${varaus}:`, error)
+        })
     
     return false
 }
@@ -235,6 +275,9 @@ function deleteVaraus(varaus_id) {
         .then((response) => {
             console.log(`Varaus ${varaus_id} poistettiin onnistuneesti`)
             getVaraukset()
+        })
+        .catch(error => {
+            console.error(`Virhe poistettaessa varausta ${varaus_id}:`, error)
         })
 }
 
