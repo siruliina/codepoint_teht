@@ -23,7 +23,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
         # Käsitellään preflight-OPTIONS-pyyntö
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, DELETE')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
     def do_GET(self):
