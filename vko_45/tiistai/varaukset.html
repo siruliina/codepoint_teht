@@ -20,6 +20,17 @@
 
     <section>
         <h3>Lisää varaus</h3>
+        <form id="varaus-form" onsubmit="addVaraus(event)">
+            <label for="varauspaiva">Varauspäivä</label>
+            <input type="date" id="varauspaiva" name="varauspaiva"/>
+            <label for="varaajat-dropdown">Varaaja</label>
+            <select name="varaaja" id="varaajat-dropdown">
+            </select>
+            <label for="tilat-dropdown">Tila</label>
+            <select name="tila" id="tilat-dropdown">
+            </select>
+            <input type="submit" value="Lisää"/>
+        </form>
     </section>
 
     <section>

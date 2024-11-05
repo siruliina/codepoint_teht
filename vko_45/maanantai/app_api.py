@@ -3,9 +3,6 @@ import socketserver
 import mysql.connector
 import urllib.parse
 import json
-#from varaajat_html import render_varaajat
-#from tilat_html import render_tilat
-#from varaukset_html import render_varaukset
 
 PORT = 8000
 
@@ -22,6 +19,13 @@ def db_yhteys():
 # HttpRequests on luokka, joka perii SimpleHTTPRequestHandler joka löytyy Pythonin standardikirjaston http.server-moduulista
 # SimpleHTTPRequestHandler tarjoaa metodeja HTTP pyyntöjen käsittelyyn
 class HttpRequests(http.server.SimpleHTTPRequestHandler):
+    def do_OPTIONS(self):
+        # Käsitellään preflight-OPTIONS-pyyntö
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
     def do_GET(self):
         # GET kaikki varaajat
         if self.path == "/varaajat":
@@ -29,7 +33,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             self.send_response(200)
             # Selaimelle tieto, että data tulee html muodossa
             self.send_header("Content-type", "application/json")
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
 
             # Yhteys tietokantaan
@@ -53,7 +57,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
         elif self.path.startswith("/varaajat/"):
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
             
             varaaja_id = int(self.path.split("/")[-1]) # Otetaan id polusta
@@ -73,7 +77,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
         elif self.path == "/tilat":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
 
             connection = db_yhteys()
@@ -91,7 +95,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
         elif self.path.startswith("/tilat/"):
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
             
             tila_id = int(self.path.split("/")[-1])
@@ -109,7 +113,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
         elif self.path == "/varaukset":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
 
             connection = db_yhteys()
@@ -135,7 +139,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
         elif self.path.startswith("/varaukset/"):
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
             
             varaus_id = int(self.path.split("/")[-1])
@@ -184,7 +188,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             
             self.send_response(201)  # 201 Created
             self.send_header('Content-Type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
             
             uusi_varaaja = {
@@ -211,7 +215,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
 
             self.send_response(201)
             self.send_header("Content-Type", "application/json")
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
             
             uusi_tila = {
@@ -243,7 +247,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             connection.commit()
             self.send_response(201)
             self.send_header("Content-type", "application/json")
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
 
             uusi_varaus = {
@@ -269,6 +273,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             connection.close()
 
             self.send_response(204)
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
 
         # Tilan poistaminen
@@ -282,6 +287,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             connection.close()
 
             self.send_response(204)
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
         
         # Varauksen poistaminen
@@ -295,6 +301,7 @@ class HttpRequests(http.server.SimpleHTTPRequestHandler):
             connection.close()
 
             self.send_response(204)
+            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
             self.end_headers()
 
 # Luodaan TCP palvelin, joka kuuntelee saapuvia yhteyksiä
