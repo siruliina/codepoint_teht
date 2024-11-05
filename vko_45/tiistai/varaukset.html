@@ -4,6 +4,7 @@
     <title>Varaukset</title>
     <script defer src="./node_modules/axios/dist/axios.min.js"></script>
     <script defer src="index.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
@@ -19,18 +20,20 @@
     <h2>Varaukset</h2>
 
     <section>
-        <h3>Lisää varaus</h3>
-        <form id="varaus-form" onsubmit="addVaraus(event)">
-            <label for="varauspaiva">Varauspäivä</label>
-            <input type="date" id="varauspaiva" name="varauspaiva"/>
-            <label for="varaajat-dropdown">Varaaja</label>
-            <select name="varaaja" id="varaajat-dropdown">
-            </select>
-            <label for="tilat-dropdown">Tila</label>
-            <select name="tila" id="tilat-dropdown">
-            </select>
-            <input type="submit" value="Lisää"/>
-        </form>
+        <div class="form-div">
+            <h3>Lisää varaus</h3>
+            <form id="varaus-form" onsubmit="addVaraus(event)">
+                <label for="varauspaiva">Varauspäivä</label>
+                <input type="date" id="varauspaiva" name="varauspaiva" required/>
+                <label for="varaajat-dropdown">Varaaja</label>
+                <select name="varaaja" id="varaajat-dropdown" required>
+                </select>
+                <label for="tilat-dropdown">Tila</label>
+                <select name="tila" id="tilat-dropdown" required>
+                </select>
+                <input type="submit" value="Lisää"/>
+            </form>
+        </div>
     </section>
 
     <section>
@@ -49,7 +52,7 @@
                 
             </tbody>
         </table>
-        <button onclick="getVaraukset()">Hae varaukset</button>
+        <button class="hae-tiedot" onclick="getVaraukset()">Hae varaukset</button>
     </section>
 </body>
 </html>
