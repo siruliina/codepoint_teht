@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
-    <title>Tilanvarausjärjestelmä</title>
+    <title>Kirjaudu sisään</title>
     <script defer src="./node_modules/axios/dist/axios.min.js"></script>
     <script defer src="index.js"></script>
     <link rel="stylesheet" href="styles.css">
@@ -18,9 +18,14 @@
         <h1>Tilanvarausjärjestelmä</h1>
     </header>
     <section>
-        <h2>Tervetuloa tilanvarausjärjestelmään!</h2>
-        <p>Täällä voit lisätä ja poistaa varaajia, tiloja ja varauksia.
-            Käytä ylälaidan navigointipalkkia siirtyäksesi sivulta toiselle.</p>
+        <h2>Kirjaudu sisään</h2>
+        <form id="login-form" onsubmit="return login(event)">
+            <label for="nimi">Nimi</label>
+            <input type="text" id="nimi" name="nimi"/>
+            <label for="salasana">Salasana</label>
+            <input type="password" id="salasana" name="password"/>
+            <input type="submit" value="Kirjaudu sisään"/>
+        </form>
     </section>
 </body>
 </html>

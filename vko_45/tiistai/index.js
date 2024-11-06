@@ -1,3 +1,26 @@
+// Kirjautuminen
+function login(event) {
+    event.preventDefault()
+
+    const nimi = document.querySelector('#login-form #nimi').value
+    const salasana = document.querySelector('#login-form #salasana').value
+
+    const kayttaja = {
+        nimi: nimi,
+        salasana: salasana
+    }
+
+    axios.post('http://localhost:8000/login', kayttaja)
+        .then(response => {
+            console.log(`Käyttäjä ${kayttaja} lisättiin onnistuneesti`)
+        })
+        .catch(error => {
+            console.error('Virhe kirjautumisessa:', error)
+        })
+
+    return false
+}
+
 // Varaajat
 function getVaraajat() {
     axios.get('http://localhost:8000/varaajat')
