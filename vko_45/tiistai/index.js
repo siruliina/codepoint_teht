@@ -10,20 +10,22 @@ function login(event) {
         salasana: salasana
     }
 
-    axios.post('http://localhost:8000/login', kayttaja)
+    axios.post('http://localhost:8000/login', kayttaja, {withCredentials: true})  // Oikea paikka lisätä `withCredentials`
         .then(response => {
-            console.log(`Käyttäjä ${kayttaja} lisättiin onnistuneesti`)
+            console.log(`Käyttäjä ${nimi} kirjautui onnistuneesti!`)  // Tulostaa nimen eikä koko objektia
         })
         .catch(error => {
-            console.error('Virhe kirjautumisessa:', error)
+            console.error('Virhe kirjautumisessa:', error.response ? error.response.data : error)  // Näyttää mahdollisen virhesanoman
         })
 
     return false
 }
 
 // Varaajat
-function getVaraajat() {
-    axios.get('http://localhost:8000/varaajat')
+function getVaraajat(event) {
+    event.preventDefault()
+
+    axios.get('http://localhost:8000/varaajat', {withCredentials: true})
         .then(response => {
             console.log('Varaajat:', response.data)
             createVaraajaTable(response.data)
@@ -32,6 +34,7 @@ function getVaraajat() {
         .catch(error => {
             console.error(`Virhe hakiessa varaajia:`, error)
         })
+    return false
 }
 
 function createVaraajaTable(varaajat) {
@@ -54,7 +57,7 @@ function createVaraajaTable(varaajat) {
             const delete_button = document.createElement('button')
             delete_button.textContent = 'X'
             delete_button.onclick = function() {
-                deleteVaraaja(varaaja.id)
+                return deleteVaraaja(varaaja.id)
             }
             delete_cell.appendChild(delete_button)
             row.appendChild(delete_cell)
@@ -93,7 +96,7 @@ function addVaraaja(event) {
         nimi: nimi
     }
 
-    axios.post('http://localhost:8000/varaajat', varaaja)
+    axios.post('http://localhost:8000/varaajat', varaaja, {withCredentials: true})
     .then((response) => {
         console.log('Varaaja lisätty onnistuneesti:', response.data)
         getVaraajat()
@@ -106,7 +109,8 @@ function addVaraaja(event) {
 }
 
 function deleteVaraaja(varaaja_id) {
-    axios.delete(`http://localhost:8000/varaajat/${varaaja_id}`)
+
+    axios.delete(`http://localhost:8000/varaajat/${varaaja_id}`, {withCredentials: true})
         .then((response) => {
             console.log(`Varaaja ${varaaja_id} poistettiin onnistuneesti`)
             getVaraajat()
@@ -114,11 +118,13 @@ function deleteVaraaja(varaaja_id) {
         .catch(error => {
             console.error(`Virhe poistettaessa varaajaa ${varaaja_id}:`, error)
         })
+
+    return false
 }
 
 // Tilat
 function getTilat() {
-    axios('http://localhost:8000/tilat')
+    axios('http://localhost:8000/tilat', {withCredentials: true})
         .then(response => {
             console.log('Tilat:', response.data)
             createTilaTable(response.data)
@@ -190,7 +196,7 @@ function addTila(event) {
         tilan_nimi: tilan_nimi
     }
 
-    axios.post('http://localhost:8000/tilat', tila)
+    axios.post('http://localhost:8000/tilat', tila, {withCredentials: true})
         .then((response) => {
             console.log('Tila lisätty onnistuneesti:', response.data)
             getTilat()
@@ -203,7 +209,7 @@ function addTila(event) {
 }
 
 function deleteTila(tila_id) {
-    axios.delete(`http://localhost:8000/tilat/${tila_id}`)
+    axios.delete(`http://localhost:8000/tilat/${tila_id}`, {withCredentials: true})
         .then((response) => {
             console.log(`Tila ${tila_id} poistettiin onnistuneesti`)
             getTilat()
@@ -215,7 +221,7 @@ function deleteTila(tila_id) {
 
 // Varaukset
 function getVaraukset() {
-    axios('http://localhost:8000/varaukset')
+    axios('http://localhost:8000/varaukset', {withCredentials: true})
         .then(response => {
             console.log('Varaukset:', response.data)
             createVarausTable(response.data)
@@ -280,7 +286,7 @@ function addVaraus(event) {
         tila: tila
     }
 
-    axios.post('http://localhost:8000/varaukset', varaus)
+    axios.post('http://localhost:8000/varaukset', varaus, {withCredentials: true})
         .then((response) => {
             console.log('Varaus lisättiin onnistuneesti', response.data)
             getVaraukset()
@@ -294,7 +300,7 @@ function addVaraus(event) {
 
 function deleteVaraus(varaus_id) {
 
-    axios.delete(`http://localhost:8000/varaukset/${varaus_id}`)
+    axios.delete(`http://localhost:8000/varaukset/${varaus_id}`, {withCredentials: true})
         .then((response) => {
             console.log(`Varaus ${varaus_id} poistettiin onnistuneesti`)
             getVaraukset()
@@ -304,8 +310,20 @@ function deleteVaraus(varaus_id) {
         })
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+function logout(event) {
+    event.preventDefault()
+
+    axios.delete('http://localhost:8000/logout', {withCredentials: true})
+        .then((response) => {
+            console.log('Käyttäjä kirjattiin ulos onnistuneesti')
+        })
+        .catch(error => {
+            console.error('Virhe kirjautuessa ulos', error)
+        })
+}
+
+/*document.addEventListener('DOMContentLoaded', function() {
     getVaraajat()
     getTilat()
     getVaraukset()
-})
+})*/
