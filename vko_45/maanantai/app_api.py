@@ -21,7 +21,7 @@ def db_yhteys():
 class HttpRequests(SimpleHTTPRequestHandler):
 
     def _send_cors_headers(self):
-        self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
+        self.send_header('Access-Control-Allow-Origin', 'http://localhost:3000')
         self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
         self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
         self.send_header('Access-Control-Allow-Credentials', 'true')
