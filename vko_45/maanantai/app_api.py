@@ -20,13 +20,16 @@ def db_yhteys():
 # SimpleHTTPRequestHandler tarjoaa metodeja HTTP pyyntöjen käsittelyyn
 class HttpRequests(SimpleHTTPRequestHandler):
 
-    def do_OPTIONS(self):
-        # Käsitellään preflight-OPTIONS-pyyntö
-        self.send_response(200)
+    def _send_cors_headers(self):
         self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
         self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
         self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-        self.send_header('Access-Control-Allow-Credentials', 'true')       
+        self.send_header('Access-Control-Allow-Credentials', 'true')
+
+    def do_OPTIONS(self):
+        # Käsitellään preflight-OPTIONS-pyyntö
+        self.send_response(200)
+        self._send_cors_headers()      
         self.end_headers()
         print("options loppu")
 
@@ -46,10 +49,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
             if self.user:
                 # 200 vastaus kertoo asiakkaalle että pyyntö onnistui
                 self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
 
                 cursor.execute("SELECT * FROM varaajat ORDER BY nimi ASC")
@@ -61,10 +61,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(varaajat).encode("utf-8"))
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()     
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -72,10 +69,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
         elif self.path.startswith("/varaajat/"):
             if self.user:
                 self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
                 
                 varaaja_id = int(self.path.split("/")[-1]) # Otetaan id polusta
@@ -87,10 +81,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(varaaja).encode("utf-8"))
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()     
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -98,10 +89,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
         elif self.path == "/tilat":
             if self.user:
                 self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
 
                 cursor.execute("SELECT * FROM tilat ORDER BY tilan_nimi ASC")
@@ -110,10 +98,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(tilat).encode("utf-8"))
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()     
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
         
@@ -121,10 +106,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
         elif self.path.startswith("/tilat/"):
             if self.user:
                 self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
                 
                 tila_id = int(self.path.split("/")[-1])
@@ -134,10 +116,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(tila).encode("utf-8"))
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()     
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -145,10 +124,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
         elif self.path == "/varaukset":
             if self.user:
                 self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
 
                 cursor.execute(''' SELECT varaukset.id, varaukset.varauspaiva, varaajat.nimi AS varaaja, tilat.tilan_nimi AS tila
@@ -165,10 +141,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(varaukset).encode())
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()    
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
         
@@ -176,10 +149,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
         elif self.path.startswith("/varaukset/"):
             if self.user:
                 self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
                 
                 varaus_id = int(self.path.split("/")[-1])
@@ -198,20 +168,14 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(varaus).encode("utf-8"))
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()     
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
         else:
             # Error Not found koodi asiakkaalle, jos polku ei vastaa mitään
             self.send_response(404)
-            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-            self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-            self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-            self.send_header('Access-Control-Allow-Credentials', 'true')       
+            self._send_cors_headers()   
             self.end_headers()
             self.wfile.write(b"404 - Not Found")
 
@@ -249,33 +213,24 @@ class HttpRequests(SimpleHTTPRequestHandler):
                     sid = self.generate_sid()
                     sessions[sid] = {"username": nimi}
                     self.send_response(200)
-                    self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                    self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                    self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                    self.send_header('Access-Control-Allow-Credentials', 'true')
+                    self._send_cors_headers()
 
                     self.send_header("Set-Cookie", f"sid={sid}; SameSite=None; Secure")
                     self.end_headers()
                     self.wfile.write(b"Logged In")
                 else:
                     self.send_response(401)
-                    self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                    self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                    self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                    self.send_header('Access-Control-Allow-Credentials', 'true')       
+                    self._send_cors_headers()
                     self.end_headers()
                     self.wfile.write(b"Unauthorized")
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()     
                 self.end_headers()
                 self.wfile.write(b"Already logged in")
 
         # Uuden varaajan lisäys
-        if self.path == "/varaajat":
+        elif self.path == "/varaajat":
             if self.user:
                 # Content-Length kertoo kuinka monta tavua POST pyynnössä on
                 content_length = int(self.headers['Content-Length'])
@@ -291,10 +246,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 connection.commit()
                 
                 self.send_response(201)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
                 
                 uusi_varaaja = {
@@ -306,10 +258,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
 
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()      
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -325,10 +274,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 connection.commit()
 
                 self.send_response(201)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
                 
                 uusi_tila = {
@@ -340,10 +286,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
 
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()  
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -365,10 +308,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 connection.commit()
                 
                 self.send_response(201)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
 
                 uusi_varaus = {
@@ -381,10 +321,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
 
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()      
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")  
 
@@ -406,19 +343,13 @@ class HttpRequests(SimpleHTTPRequestHandler):
         if "/logout" in self.path:
             if not self.user:
                 self.send_response(400)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()   
                 self.end_headers()
                 self.wfile.write(b"Not logged in")
             else:
                 del sessions[self.user]
                 self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.send_header("Set-Cookie", "sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure")
                 self.end_headers()
                 self.wfile.write(b"Logged Out")
@@ -431,17 +362,11 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 connection.commit()
 
                 self.send_response(204)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()  
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -453,17 +378,11 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 connection.commit()
 
                 self.send_response(204)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()     
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
         
@@ -475,17 +394,11 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 connection.commit()
 
                 self.send_response(204)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')
+                self._send_cors_headers()
                 self.end_headers()
             else:
                 self.send_response(401)
-                self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-                self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-                self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-                self.send_header('Access-Control-Allow-Credentials', 'true')       
+                self._send_cors_headers()     
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
     
