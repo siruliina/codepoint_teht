@@ -23,7 +23,7 @@
     <section>
         <div class="form-div">
             <h3>Lisää varaaja</h3>
-            <form id="varaaja-form" onsubmit="return addVaraaja(event)">
+            <form id="varaaja-form" onsubmit="addVaraaja(event)">
                 <label for="nimi">Nimi</label>
                 <input type="text" id="nimi" name="nimi" required/>
                 <input type="submit" value="Lisää"/>
@@ -45,7 +45,7 @@
 
             </tbody>
         </table>
-        <button class="hae-tiedot" onclick="return getVaraajat(event)">Hae tiedot</button>
+        <button class="hae-tiedot" onclick="createVaraajaTable()">Hae tiedot</button>
     </section>
 </body>
 </html>

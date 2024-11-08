@@ -60,8 +60,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 # wfile odottaa byte dataa, mutta html on string muodossa, joten encode()
                 self.wfile.write(json.dumps(varaajat).encode("utf-8"))
             else:
-                self.send_response(401)
-                self._send_cors_headers()     
+                self.send_response(401)  
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -81,7 +80,6 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(varaaja).encode("utf-8"))
             else:
                 self.send_response(401)
-                self._send_cors_headers()     
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -97,8 +95,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
 
                 self.wfile.write(json.dumps(tilat).encode("utf-8"))
             else:
-                self.send_response(401)
-                self._send_cors_headers()     
+                self.send_response(401) 
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
         
@@ -115,8 +112,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
 
                 self.wfile.write(json.dumps(tila).encode("utf-8"))
             else:
-                self.send_response(401)
-                self._send_cors_headers()     
+                self.send_response(401)   
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -141,7 +137,6 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(varaukset).encode())
             else:
                 self.send_response(401)
-                self._send_cors_headers()    
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
         
@@ -167,15 +162,13 @@ class HttpRequests(SimpleHTTPRequestHandler):
             
                 self.wfile.write(json.dumps(varaus).encode("utf-8"))
             else:
-                self.send_response(401)
-                self._send_cors_headers()     
+                self.send_response(401)   
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
         else:
             # Error Not found koodi asiakkaalle, jos polku ei vastaa mitään
             self.send_response(404)
-            self._send_cors_headers()   
             self.end_headers()
             self.wfile.write(b"404 - Not Found")
 
@@ -214,18 +207,15 @@ class HttpRequests(SimpleHTTPRequestHandler):
                     sessions[sid] = {"username": nimi}
                     self.send_response(200)
                     self._send_cors_headers()
-
                     self.send_header("Set-Cookie", f"sid={sid}; SameSite=None; Secure")
                     self.end_headers()
                     self.wfile.write(b"Logged In")
                 else:
                     self.send_response(401)
-                    self._send_cors_headers()
                     self.end_headers()
                     self.wfile.write(b"Unauthorized")
             else:
-                self.send_response(401)
-                self._send_cors_headers()     
+                self.send_response(401) 
                 self.end_headers()
                 self.wfile.write(b"Already logged in")
 
@@ -257,8 +247,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(uusi_varaaja).encode("utf-8"))
 
             else:
-                self.send_response(401)
-                self._send_cors_headers()      
+                self.send_response(401)   
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -286,7 +275,6 @@ class HttpRequests(SimpleHTTPRequestHandler):
 
             else:
                 self.send_response(401)
-                self._send_cors_headers()  
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -320,8 +308,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(uusi_varaus).encode("utf-8"))
 
             else:
-                self.send_response(401)
-                self._send_cors_headers()      
+                self.send_response(401)     
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")  
 
@@ -343,7 +330,6 @@ class HttpRequests(SimpleHTTPRequestHandler):
         if "/logout" in self.path:
             if not self.user:
                 self.send_response(400)
-                self._send_cors_headers()   
                 self.end_headers()
                 self.wfile.write(b"Not logged in")
             else:
@@ -366,7 +352,6 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.end_headers()
             else:
                 self.send_response(401)
-                self._send_cors_headers()  
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
 
@@ -381,8 +366,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self._send_cors_headers()
                 self.end_headers()
             else:
-                self.send_response(401)
-                self._send_cors_headers()     
+                self.send_response(401) 
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
         
@@ -398,7 +382,6 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.end_headers()
             else:
                 self.send_response(401)
-                self._send_cors_headers()     
                 self.end_headers()
                 self.wfile.write(b"Unauthorized")
     
@@ -418,6 +401,6 @@ class HttpRequests(SimpleHTTPRequestHandler):
 # Se ottaa vastaan pyynnöt ja käsittelee ne HttpRequests luokan avulla
 # "" tarkoittaa, että palvelin kuuntelee kaikilla IP-osotteilla, 8000 porttia käytetään
 address = ("", 8000)
-server = HTTPServer(address, HttpRequests)
+server = ThreadingHTTPServer(address, HttpRequests)
 print("Hosting server on port 8000")
 server.serve_forever()

@@ -21,73 +21,79 @@ function login(event) {
     return false
 }
 
-// Varaajat
-function getVaraajat(event) {
-    event.preventDefault()
+function createVaraajaTable() {
 
     axios.get('http://localhost:8000/varaajat', {withCredentials: true})
         .then(response => {
             console.log('Varaajat:', response.data)
-            createVaraajaTable(response.data)
-            createVaraajaDropdown(response.data)
+            const varaajat = response.data
+            const varaaja_table = document.querySelector('#varaaja-table tbody')
+
+            if (varaaja_table) {
+                varaaja_table.innerHTML = ''
+                for (let varaaja of varaajat) {
+                    const row = document.createElement('tr')
+                    
+                    const id_cell = document.createElement('td')
+                    id_cell.textContent = varaaja.id
+                    row.appendChild(id_cell)
+
+                    const nimi_cell = document.createElement('td')
+                    nimi_cell.textContent = varaaja.nimi
+                    row.appendChild(nimi_cell)
+
+                    const delete_cell = document.createElement('td')
+                    const delete_button = document.createElement('button')
+                    delete_button.textContent = 'X'
+                    delete_button.onclick = function() {
+                        return deleteVaraaja(varaaja.id)
+                    }
+                    delete_cell.appendChild(delete_button)
+                    row.appendChild(delete_cell)
+
+                    varaaja_table.appendChild(row)
+                }
+            }
+            else {
+                console.error('varaaja_table ei löytynyt')
+            }
         })
         .catch(error => {
             console.error(`Virhe hakiessa varaajia:`, error)
         })
-    return false
+
+    
 }
 
-function createVaraajaTable(varaajat) {
-    const varaaja_table = document.querySelector('#varaaja-table tbody')
+function createVaraajaDropdown() {
 
-    if (varaaja_table) {
-        varaaja_table.innerHTML = ''
-        for (let varaaja of varaajat) {
-            const row = document.createElement('tr')
-            
-            const id_cell = document.createElement('td')
-            id_cell.textContent = varaaja.id
-            row.appendChild(id_cell)
+    axios.get('http://localhost:8000/varaajat', {withCredentials: true})
+        .then(response => {
+            console.log('Varaajat:', response.data)
+            const varaajat = response.data
+            const varaajat_dropdown = document.getElementById('varaajat-dropdown')
 
-            const nimi_cell = document.createElement('td')
-            nimi_cell.textContent = varaaja.nimi
-            row.appendChild(nimi_cell)
-
-            const delete_cell = document.createElement('td')
-            const delete_button = document.createElement('button')
-            delete_button.textContent = 'X'
-            delete_button.onclick = function() {
-                return deleteVaraaja(varaaja.id)
+            if (varaajat_dropdown) {
+                varaajat_dropdown.innerHTML = ''
+                for (let varaaja of varaajat) {
+                    const option = document.createElement('option')
+                    option.value = varaaja.id
+                    option.textContent = varaaja.nimi
+                    varaajat_dropdown.appendChild(option)
+                }
             }
-            delete_cell.appendChild(delete_button)
-            row.appendChild(delete_cell)
+            else {
+                console.error('varaajat_dropdown ei löytynyt')
+            }
 
-            varaaja_table.appendChild(row)
-        }
-    }
-    else {
-        console.error('varaaja_table ei löytynyt')
-    }
-}
-
-function createVaraajaDropdown(varaajat) {
-    const varaajat_dropdown = document.getElementById('varaajat-dropdown')
-
-    if (varaajat_dropdown) {
-        varaajat_dropdown.innerHTML = ''
-        for (let varaaja of varaajat) {
-            const option = document.createElement('option')
-            option.value = varaaja.id
-            option.textContent = varaaja.nimi
-            varaajat_dropdown.appendChild(option)
-        }
-    }
-    else {
-        console.error('varaajat_dropdown ei löytynyt')
-    }
+        })
+        .catch(error => {
+            console.error(`Virhe hakiessa varaajia:`, error)
+        })   
 }
 
 function addVaraaja(event) {
+    console.log(event)
     event.preventDefault()
 
     const nimi = document.querySelector('#varaaja-form #nimi').value
@@ -123,68 +129,74 @@ function deleteVaraaja(varaaja_id) {
 }
 
 // Tilat
-function getTilat() {
+
+function createTilaTable() {
     axios('http://localhost:8000/tilat', {withCredentials: true})
         .then(response => {
             console.log('Tilat:', response.data)
-            createTilaTable(response.data)
-            createTilaDropdown(response.data)
+            const tilat = response.data
+            const tila_table = document.querySelector('#tila-table tbody')
+            
+            if (tila_table) {
+                tila_table.innerHTML = ''
+
+                for (let tila of tilat) {
+                    const row = document.createElement('tr')
+
+                    const id_cell = document.createElement('td')
+                    id_cell.textContent = tila.id
+                    row.appendChild(id_cell)
+
+                    const nimi_cell = document.createElement('td')
+                    nimi_cell.textContent = tila.tilan_nimi
+                    row.appendChild(nimi_cell)
+
+                    const delete_cell = document.createElement('td')
+                    const delete_button = document.createElement('button')
+                    delete_button.textContent= 'X'
+                    delete_button.onclick = function() {
+                        deleteTila(tila.id)
+                    }
+                    delete_cell.appendChild(delete_button)
+                    row.appendChild(delete_cell)
+
+                    tila_table.appendChild(row)
+                }
+            }
+            else {
+                console.error('tila_table ei löytynyt')
+            }
         })
         .catch(error => {
             console.error(`Virhe hakiessa tiloja:`, error)
         })
-}
-
-function createTilaTable(tilat) {
-    const tila_table = document.querySelector('#tila-table tbody')
-    
-    if (tila_table) {
-        tila_table.innerHTML = ''
-
-        for (let tila of tilat) {
-            const row = document.createElement('tr')
-
-            const id_cell = document.createElement('td')
-            id_cell.textContent = tila.id
-            row.appendChild(id_cell)
-
-            const nimi_cell = document.createElement('td')
-            nimi_cell.textContent = tila.tilan_nimi
-            row.appendChild(nimi_cell)
-
-            const delete_cell = document.createElement('td')
-            const delete_button = document.createElement('button')
-            delete_button.textContent= 'X'
-            delete_button.onclick = function() {
-                deleteTila(tila.id)
-            }
-            delete_cell.appendChild(delete_button)
-            row.appendChild(delete_cell)
-
-            tila_table.appendChild(row)
-        }
-    }
-    else {
-        console.error('tila_table ei löytynyt')
-    }
+            
 }
 
 function createTilaDropdown(tilat) {
-    const tilat_dropdown = document.getElementById('tilat-dropdown')
+    axios('http://localhost:8000/tilat', {withCredentials: true})
+        .then(response => {
+            console.log('Tilat:', response.data)
+            const tilat = response.data
+            const tilat_dropdown = document.getElementById('tilat-dropdown')
 
-    if (tilat_dropdown) {
-        tilat_dropdown.innerHTML = ''
+            if (tilat_dropdown) {
+                tilat_dropdown.innerHTML = ''
 
-        for (let tila of tilat) {
-            const option = document.createElement('option')
-            option.value = tila.id
-            option.textContent = tila.tilan_nimi
-            tilat_dropdown.appendChild(option)
-        }
-    }
-    else {
-        console.error('tilat_dropdown ei löytynyt')
-    }
+                for (let tila of tilat) {
+                    const option = document.createElement('option')
+                    option.value = tila.id
+                    option.textContent = tila.tilan_nimi
+                    tilat_dropdown.appendChild(option)
+                }
+            }
+            else {
+                console.error('tilat_dropdown ei löytynyt')
+            }
+        })
+        .catch(error => {
+            console.error('Virhe hakiessa tiloja:', error)
+        })
 }
 
 function addTila(event) {
