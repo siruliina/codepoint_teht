@@ -31,11 +31,9 @@ class HttpRequests(SimpleHTTPRequestHandler):
         self.send_response(200)
         self._send_cors_headers()      
         self.end_headers()
-        print("options loppu")
 
     def do_GET(self):
         cookies = self.parse_cookies(self.headers.get("Cookie"))
-        print(cookies)
         if "sid" in cookies:
             self.user = cookies["sid"] if (cookies["sid"] in sessions) else False
         else:
@@ -72,7 +70,6 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.end_headers()
                 
                 varaaja_id = int(self.path.split("/")[-1]) # Otetaan id polusta
-                print(varaaja_id)
 
                 cursor.execute("SELECT * FROM varaajat WHERE id = %s", (varaaja_id,))
                 varaaja = cursor.fetchone()
@@ -176,9 +173,7 @@ class HttpRequests(SimpleHTTPRequestHandler):
         connection.close()
 
     def do_POST(self):
-        print("päästiin POSTIIN")
         cookies = self.parse_cookies(self.headers.get("Cookie"))
-        print(cookies)
         if "sid" in cookies:
             self.user = cookies["sid"] if (cookies["sid"] in sessions) else False
         else:
@@ -190,7 +185,6 @@ class HttpRequests(SimpleHTTPRequestHandler):
             
         # Kirjautuminen
         if self.path == "/login":
-            print("id path login")
             if not self.user:                
                 content_length = int(self.headers['Content-Length'])
                 post_data = self.rfile.read(content_length).decode('utf-8')

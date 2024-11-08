@@ -19,14 +19,14 @@
     </header>
     <section>
         <h2>Kirjaudu sisään</h2>
-        <form id="login-form" onsubmit="return login(event)">
+        <form id="login-form" onsubmit="login(event)">
             <label for="nimi">Nimi</label>
             <input type="text" id="nimi" name="nimi"/>
             <label for="salasana">Salasana</label>
             <input type="password" id="salasana" name="password"/>
             <input type="submit" value="Kirjaudu sisään"/>
         </form>
-        <button onclick="logout(event)">Kirjaudu ulos</button>
+        <button onclick="logout()">Kirjaudu ulos</button>
     </section>
 </body>
 </html>

@@ -10,15 +10,13 @@ function login(event) {
         salasana: salasana
     }
 
-    axios.post('http://localhost:8000/login', kayttaja, {withCredentials: true})  // Oikea paikka lisätä `withCredentials`
+    axios.post('http://localhost:8000/login', kayttaja, {withCredentials: true})
         .then(response => {
-            console.log(`Käyttäjä ${nimi} kirjautui onnistuneesti!`)  // Tulostaa nimen eikä koko objektia
+            console.log(`Käyttäjä ${nimi} kirjautui onnistuneesti!`)
         })
         .catch(error => {
-            console.error('Virhe kirjautumisessa:', error.response ? error.response.data : error)  // Näyttää mahdollisen virhesanoman
-        })
-
-    return false
+            console.error('Virhe kirjautumisessa:', error.response ? error.response.data : error)
+        })   
 }
 
 function createVaraajaTable() {
@@ -46,7 +44,7 @@ function createVaraajaTable() {
                     const delete_button = document.createElement('button')
                     delete_button.textContent = 'X'
                     delete_button.onclick = function() {
-                        return deleteVaraaja(varaaja.id)
+                        deleteVaraaja(varaaja.id)
                     }
                     delete_cell.appendChild(delete_button)
                     row.appendChild(delete_cell)
@@ -60,9 +58,7 @@ function createVaraajaTable() {
         })
         .catch(error => {
             console.error(`Virhe hakiessa varaajia:`, error)
-        })
-
-    
+        })   
 }
 
 function createVaraajaDropdown() {
@@ -105,7 +101,7 @@ function addVaraaja(event) {
     axios.post('http://localhost:8000/varaajat', varaaja, {withCredentials: true})
     .then((response) => {
         console.log('Varaaja lisätty onnistuneesti:', response.data)
-        getVaraajat()
+        createVaraajaTable()
     })
     .catch(error => {
         console.error(`Virhe lisätessä varaajaa ${varaaja}:`, error)
@@ -119,17 +115,14 @@ function deleteVaraaja(varaaja_id) {
     axios.delete(`http://localhost:8000/varaajat/${varaaja_id}`, {withCredentials: true})
         .then((response) => {
             console.log(`Varaaja ${varaaja_id} poistettiin onnistuneesti`)
-            getVaraajat()
+            createVaraajaTable()
         })
         .catch(error => {
             console.error(`Virhe poistettaessa varaajaa ${varaaja_id}:`, error)
         })
-
-    return false
 }
 
 // Tilat
-
 function createTilaTable() {
     axios('http://localhost:8000/tilat', {withCredentials: true})
         .then(response => {
@@ -211,20 +204,18 @@ function addTila(event) {
     axios.post('http://localhost:8000/tilat', tila, {withCredentials: true})
         .then((response) => {
             console.log('Tila lisätty onnistuneesti:', response.data)
-            getTilat()
+            createTilaTable()
         })
         .catch(error => {
             console.error(`Virhe lisätessä tilaa ${tila}:`, error)
         })
-    
-    return false
 }
 
 function deleteTila(tila_id) {
     axios.delete(`http://localhost:8000/tilat/${tila_id}`, {withCredentials: true})
         .then((response) => {
             console.log(`Tila ${tila_id} poistettiin onnistuneesti`)
-            getTilat()
+            createTilaTable()
         })
         .catch(error => {
             console.error(`Virhe poistettaessa tilaa ${tila_id}:`, error)
@@ -306,8 +297,6 @@ function addVaraus(event) {
         .catch(error => {
             console.error(`Virhe lisätessä varausta ${varaus}:`, error)
         })
-    
-    return false
 }
 
 function deleteVaraus(varaus_id) {
@@ -322,8 +311,7 @@ function deleteVaraus(varaus_id) {
         })
 }
 
-function logout(event) {
-    event.preventDefault()
+function logout() {
 
     axios.delete('http://localhost:8000/logout', {withCredentials: true})
         .then((response) => {
@@ -334,8 +322,22 @@ function logout(event) {
         })
 }
 
-/*document.addEventListener('DOMContentLoaded', function() {
-    getVaraajat()
-    getTilat()
-    getVaraukset()
-})*/
+if (window.location.pathname === "/vko_45/tiistai/varaukset.html") {
+    window.addEventListener("DOMContentLoaded", function() {
+      createTilaDropdown()
+      createVaraajaDropdown()
+      getVaraukset()
+    })
+}
+
+if (window.location.pathname === "/vko_45/tiistai/varaajat.html") {
+    window.addEventListener("DOMContentLoaded", function() {
+      createVaraajaTable()
+    })
+}
+
+if (window.location.pathname === "/vko_45/tiistai/tilat.html") {
+    window.addEventListener("DOMContentLoaded", function() {
+      createTilaTable()
+    })
+}
