@@ -1,9 +1,11 @@
 function Etusivu() {
 
     return (
-        <div>
-            <p>Etusivu</p>
-        </div>
+        <>
+            <h2>Tervetuloa tilanvarausjärjestelmään!</h2>
+            <p>Täällä voit lisätä ja poistaa varaajia, tiloja ja varauksia.
+                Käytä ylälaidan navigointipalkkia siirtyäksesi sivulta toiselle.</p>
+        </>
     );
 }
   

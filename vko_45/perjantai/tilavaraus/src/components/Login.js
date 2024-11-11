@@ -1,7 +1,10 @@
 import { useState } from "react";
 import axios from "axios"
+import { useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({setUser}) {
+
+    const navigate = useNavigate()
 
     const [nimi, setNimi] = useState("")
     const [salasana, setSalasana] = useState("")
@@ -18,6 +21,8 @@ function Login() {
         axios.post("http://localhost:8000/login", kayttaja, {withCredentials: true})
         .then((response) => {
             console.log(`Käyttäjä ${nimi} kirjattiin sisään onnistuneesti`)
+            setUser(true)
+            navigate("/")
         })
         .catch(error => {
             console.error("Virhe kirjautuessa sisään:", error)

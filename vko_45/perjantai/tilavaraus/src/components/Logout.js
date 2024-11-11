@@ -1,14 +1,15 @@
 import axios from "axios"
+import { useNavigate } from "react-router-dom";
 
-function Logout() {
+function Logout({setUser}) {
+    const navigate = useNavigate();
 
     const logout = () => {
-
-        console.log("logoutissa ollaan")
-
         axios.delete("http://localhost:8000/logout", {withCredentials: true})
         .then((response) => {
             console.log("Käyttäjä kirjattiin ulos onnistuneesti")
+            setUser(false)
+            navigate("/login");
         })
         .catch(error => {
             console.error("Virhe kirjautuessa ulos:", error)
