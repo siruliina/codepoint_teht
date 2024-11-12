@@ -51,10 +51,8 @@ function Varaukset() {
         axios.get("http://localhost:8000/varaukset", {withCredentials: true})
         .then((response) => {
             console.log("Varaukset haettiin onnistuneesti")
-            console.log(response.data)
             setVaraukset(response.data)
         })
-        .then((response) => { console.log(varaukset)})
         .catch(error => {
             console.error("Virhe hakiessa varauksia:", error)
         })

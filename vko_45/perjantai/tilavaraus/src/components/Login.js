@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import axios from "axios"
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
@@ -10,10 +10,6 @@ function Login() {
 
     const navigate = useNavigate()
     const { setAuth } = useContext(AuthContext); 
-
-    /*const [nimi, setNimi] = useState("")
-    const [salasana, setSalasana] = useState("")*/
-    
 
     const login = (data) => {
 
@@ -45,7 +41,9 @@ function Login() {
                     id="nimi"
                     {...register('nimi', { required: "Tämä kenttä on pakollinen."})}
                 />
-                {errors.nimi && <span>{errors.nimi.message}</span>}
+                <div>
+                    {errors.nimi && <span>{errors.nimi.message}</span>}
+                </div><br/>
 
                 <label htmlFor="salasana">Salasana</label>
                 <input 
@@ -53,8 +51,12 @@ function Login() {
                     id="salasana" 
                     {...register('salasana', { required: "Tämä kenttä on pakollinen."})}
                 />
-                {errors.nimi && <span>{errors.nimi.message}</span>}
+                <div>
+                    {errors.nimi && <span>{errors.nimi.message}</span>}
+                </div>
+                
                 <p id="error-message"></p>
+
                 <input type="submit" value="Kirjaudu sisään" />
             </form>
         </div>

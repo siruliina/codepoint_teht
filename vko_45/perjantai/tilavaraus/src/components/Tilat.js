@@ -8,16 +8,10 @@ function Tilat() {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const [nimi, setNimi] = useState("")
     const [tilat, setTilat] = useState([])
     const { auth } = useContext(AuthContext);
 
-    const onSubmit = (data) => {
-        console.log(data)
-    }
-
     const lisaaTila = (data) => {
-        //event.preventDefault()
 
         const tila = {
             tilan_nimi: data.nimi
@@ -73,7 +67,17 @@ function Tilat() {
                         <input 
                             type="text"
                             id="nimi"
-                            {...register('nimi', { required: "Tämä kenttä on pakollinen."})}
+                            {...register('nimi', { 
+                                required: "Tämä kenttä on pakollinen.",
+                                minLength: {
+                                    value: 5,
+                                    message: "Tilan nimen on oltava vähintään 5 merkkiä pitkä"
+                                },
+                                maxLength: {
+                                    value: 20,
+                                    message: "Tilan nimi voi olla enintään 20 merkkiä pitkä"
+                                }
+                            })}
                         />
                         {errors.nimi && <span>{errors.nimi.message}</span>}
                         <input type="submit" value="Lisää tila" />

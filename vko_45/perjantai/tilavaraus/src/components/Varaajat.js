@@ -8,7 +8,6 @@ function Varaajat() {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const [nimi, setNimi] = useState("")
     const [varaajat, setVaraajat] = useState([])
     const { auth } = useContext(AuthContext);
 
@@ -68,7 +67,17 @@ function Varaajat() {
                         <input 
                             type="text"
                             id="nimi"
-                            {...register('nimi', { required: "Tämä kenttä on pakollinen."})}
+                            {...register('nimi', { 
+                                required: "Tämä kenttä on pakollinen.", 
+                                minLength: {
+                                    value: 5,
+                                    message: "Nimen on oltava vähintään 5 merkkiä pitkä."
+                                },
+                                maxLength: {
+                                    value: 20,
+                                    message: "Nimi voi olla enintään 20 merkkiä pitkä."
+                                }
+                            })}
                         />
                         {errors.nimi && <span>{errors.nimi.message}</span>}
                         <input type="submit" value="Lisää varaaja" />
