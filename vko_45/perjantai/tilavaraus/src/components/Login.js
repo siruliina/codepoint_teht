@@ -13,20 +13,18 @@ function Login({setUser}) {
     const login = (event) => {
         event.preventDefault()
 
-        console.log("loginissa ollaan")
         const kayttaja = {
             nimi: nimi,
             salasana: salasana
         }
-
+        
         axios.post("http://localhost:8000/login", kayttaja, {withCredentials: true})
         .then((response) => {
             console.log(`Käyttäjä ${nimi} kirjattiin sisään onnistuneesti`)
-            console.log(response.data)
+            
             const { user, sid } = response.data;
             setAuth({ user, sid });
-            navigate("/")
-            
+            navigate("/")   
         })
         .catch(error => {
             console.error("Virhe kirjautuessa sisään:", error)

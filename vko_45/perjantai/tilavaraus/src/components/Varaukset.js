@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios"
+import { useForm } from "react-hook-form";
 
 function Varaukset() {
+
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
     const [varauspaiva, setVarauspaiva] = useState("")
     const [varaaja, setVaraaja] = useState("")
@@ -10,16 +13,13 @@ function Varaukset() {
     const [varaajat, setVaraajat] = useState([])
     const [tilat, setTilat] = useState([])
 
-    const lisaa_varaus = (event) => {
-        event.preventDefault()
+    const lisaaVaraus = (data) => {
 
         const varaus = {
-            varauspaiva: varauspaiva,
-            varaaja: varaaja,
-            tila: tila
+            varauspaiva: data.varauspaiva,
+            varaaja: data.varaaja,
+            tila: data.tila
         }
-
-        console.log(varaaja)
 
         axios.post("http://localhost:8000/varaukset", varaus, { withCredentials: true })
         .then((response) => {
@@ -57,6 +57,7 @@ function Varaukset() {
             console.log(response.data)
             setVaraukset(response.data)
         })
+        .then((response) => { console.log(varaukset)})
         .catch(error => {
             console.error("Virhe hakiessa varauksia:", error)
         })
@@ -84,33 +85,50 @@ function Varaukset() {
         <>     
             <h2>Varaukset</h2>      
             <section>
-                <form onSubmit={(event) => lisaa_varaus(event)}>
+                <form onSubmit={handleSubmit(lisaaVaraus)}>
                     <label htmlFor="varauspaiva">Varauspaiva</label>
                     <input 
                         type="date"
                         id="varauspaiva"
-                        name="varauspaiva"
-                        value={varauspaiva}
-                        onChange={e => setVarauspaiva(e.target.value)}
-                        required
+                        {...register('varauspaiva', { 
+                            required: "Tämä kenttä on pakollinen.",
+                            valueAsDate: true
+                        })}
                     />
+                    <div>
+                        {errors.varauspaiva && <span>{errors.varauspaiva.message}</span>}
+                    </div><br/>
 
                     <label htmlFor="varaaja">Varaaja</label>
-                    <select id="varaaja" name="varaaja" onChange={(e) => setVaraaja(e.target.value)} value={varaaja} required>
-                        <option name="varaaja" value="" disabled placeholder="Valitse varaaja">Valitse varaaja</option>
+                    <select 
+                        id="varaaja"
+                        name="varaaja" 
+                        {...register('varaaja', { required: "Tämä kenttä on pakollinen."})}
+                    >
+                        <option name="varaaja" value="" placeholder="Valitse varaaja">Valitse varaaja</option>
                         {varaajat.map((varaaja) => {
                             return <option key={varaaja.id} name="varaaja" value={varaaja.id}>{varaaja.nimi}</option>
                         })}
                     </select>
+                    <div>
+                        {errors.varaaja && <span>{errors.varaaja.message}</span>}
+                    </div><br/>
 
                     <label htmlFor="tila">Tila</label>
-                    <select id="tila" name="tila" onChange={(e) => setTila(e.target.value)} value={tila} required>
-                        <option name="tila" value="" disabled>Valitse tila</option>
+                    <select 
+                        id="tila"
+                        name="tila"
+                        {...register('tila', { required: "Tämä kenttä on pakollinen."})}
+                    >
+                        <option name="tila" value="" placeholder="Valitse tila">Valitse tila</option>
                         {tilat.map((tila) => {
                             return <option key={varaaja.id} name="tila" value={tila.id}>{tila.tilan_nimi}</option>
                         })}
                     </select>
-                    <input type="submit" value="Lisää varaaja" />
+                    <div>
+                        {errors.tila && <span>{errors.tila.message}</span>}
+                    </div><br/>
+                    <input type="submit" value="Lisää varaus" />
                 </form>
             </section>
             
@@ -142,7 +160,7 @@ function Varaukset() {
                         })}
                     </tbody>
                 </table> 
-                : <p>Haetaan varaajia...</p>
+                : <p>Haetaan varauksia...</p>
                 }
             </section>
         </>

@@ -2,24 +2,25 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios"
 import VarTilTable from "./VarTilTable";
 import { AuthContext } from "../AuthContext";
+import { useForm } from "react-hook-form"
 
 function Varaajat() {
+
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
     const [nimi, setNimi] = useState("")
     const [varaajat, setVaraajat] = useState([])
     const { auth } = useContext(AuthContext);
-    console.log(auth)
 
-    const lisaa_varaaja = (event) => {
-        event.preventDefault()
+    const lisaaVaraaja = (data) => {
 
         const varaaja = {
-            nimi: nimi
+            nimi: data.nimi
         }
 
         axios.post("http://localhost:8000/varaajat", varaaja, { withCredentials: true })
         .then((response) => {
-            console.log(`Varaaja ${nimi} lisättiin onnistuneesti`)
+            console.log(`Varaaja ${data.nimi} lisättiin onnistuneesti`)
             return axios.get("http://localhost:8000/varaajat", { withCredentials: true });
         })
         .then((response) => {
@@ -62,16 +63,14 @@ function Varaajat() {
             <h2>Varaajat</h2>        
             {auth?.user?.rooli === "admin" && (
                 <section>
-                    <form onSubmit={(event) => lisaa_varaaja(event)}>
+                    <form onSubmit={handleSubmit(lisaaVaraaja)}>
                         <label htmlFor="nimi">Nimi</label>
                         <input 
                             type="text"
                             id="nimi"
-                            name="nimi"
-                            value={nimi}
-                            onChange={e => setNimi(e.target.value)}
-                            required
+                            {...register('nimi', { required: "Tämä kenttä on pakollinen."})}
                         />
+                        {errors.nimi && <span>{errors.nimi.message}</span>}
                         <input type="submit" value="Lisää varaaja" />
                     </form>
                 </section>
