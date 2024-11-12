@@ -7,56 +7,30 @@ import Tilat from "./components/Tilat";
 import Varaukset from "./components/Varaukset";
 import Logout from "./components/Logout";
 import Login from "./components/Login";
-import ProtectedRoute from "./ProtectedRoute";
 
 const Router = () => {
-    //const { auth } = useContext(AuthContext);
+    const { auth } = useContext(AuthContext);
 
     return (
-        <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route
-                path="/"
-                element={
-                    <ProtectedRoute>
-                        <Etusivu />
-                    </ProtectedRoute>
-                }
-            />
-            <Route
-                path="/varaajat"
-                element={
-                    <ProtectedRoute>
-                        <Varaajat />
-                    </ProtectedRoute>
-                }
-            />
-            <Route
-                path="/tilat"
-                element={
-                    <ProtectedRoute>
-                        <Tilat />
-                    </ProtectedRoute>
-                }
-            />
-            <Route
-                path="/varaukset"
-                element={
-                    <ProtectedRoute>
-                        <Varaukset />
-                    </ProtectedRoute>
-                }
-            />
-            <Route
-                path="/logout"
-                element={
-                    <ProtectedRoute>
-                        <Logout />
-                    </ProtectedRoute>
-                }
-            />
-            <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
+        <>
+            <Routes>
+                <Route 
+                    path="/login" 
+                    element={auth ? <Navigate to="/" /> : <Login />} 
+                />
+                {auth ? (
+                    <>
+                        <Route index element={<Etusivu />} />
+                        <Route path="/varaajat" element={<Varaajat />} />
+                        <Route path="/tilat" element={<Tilat />} />
+                        <Route path="/varaukset" element={<Varaukset />} />
+                        <Route path="/logout" element={<Logout />} />
+                    </>
+                ) : (
+                    <Route path="*" element={<Navigate to="/login" />} />
+                )}
+            </Routes>
+        </>
     );
 };
 

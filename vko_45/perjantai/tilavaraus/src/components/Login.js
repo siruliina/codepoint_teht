@@ -2,56 +2,59 @@ import { useState, useContext } from "react";
 import axios from "axios"
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
+import { useForm } from "react-hook-form"
 
-function Login({setUser}) {
+function Login() {
+
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
     const navigate = useNavigate()
     const { setAuth } = useContext(AuthContext); 
 
-    const [nimi, setNimi] = useState("")
-    const [salasana, setSalasana] = useState("")
+    /*const [nimi, setNimi] = useState("")
+    const [salasana, setSalasana] = useState("")*/
+    
 
-    const login = (event) => {
-        event.preventDefault()
+    const login = (data) => {
 
         const kayttaja = {
-            nimi: nimi,
-            salasana: salasana
+            nimi: data.nimi,
+            salasana: data.salasana
         }
         
         axios.post("http://localhost:8000/login", kayttaja, {withCredentials: true})
         .then((response) => {
-            console.log(`Käyttäjä ${nimi} kirjattiin sisään onnistuneesti`)
-            
+            console.log(`Käyttäjä ${data.nimi} kirjattiin sisään onnistuneesti`)           
             const { user, sid } = response.data;
             setAuth({ user, sid });
             navigate("/")   
         })
         .catch(error => {
             console.error("Virhe kirjautuessa sisään:", error)
+            const error_message = document.getElementById("error-message")
+            error_message.innerHTML = "Käyttäjää ei löytynyt."       
         })
     }
 
     return (
         <div>
-            <form onSubmit={(event) => login(event)}>
+            <form onSubmit={handleSubmit(login)}>
                 <label htmlFor="nimi">Nimi</label>
                 <input 
                     type="text"
                     id="nimi"
-                    name="nimi"
-                    value={nimi}
-                    onChange={e => setNimi(e.target.value)}
-                    required
+                    {...register('nimi', { required: "Tämä kenttä on pakollinen."})}
                 />
+                {errors.nimi && <span>{errors.nimi.message}</span>}
+
                 <label htmlFor="salasana">Salasana</label>
                 <input 
                     type="password" 
                     id="salasana" 
-                    name="salasana" 
-                    value={salasana} 
-                    onChange={e => setSalasana(e.target.value)}
-                    required 
+                    {...register('salasana', { required: "Tämä kenttä on pakollinen."})}
                 />
+                {errors.nimi && <span>{errors.nimi.message}</span>}
+                <p id="error-message"></p>
                 <input type="submit" value="Kirjaudu sisään" />
             </form>
         </div>

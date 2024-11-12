@@ -6,9 +6,6 @@ function Varaukset() {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const [varauspaiva, setVarauspaiva] = useState("")
-    const [varaaja, setVaraaja] = useState("")
-    const [tila, setTila] = useState("")
     const [varaukset, setVaraukset] = useState([])
     const [varaajat, setVaraajat] = useState([])
     const [tilat, setTilat] = useState([])
@@ -122,7 +119,7 @@ function Varaukset() {
                     >
                         <option name="tila" value="" placeholder="Valitse tila">Valitse tila</option>
                         {tilat.map((tila) => {
-                            return <option key={varaaja.id} name="tila" value={tila.id}>{tila.tilan_nimi}</option>
+                            return <option key={tila.id} name="tila" value={tila.id}>{tila.tilan_nimi}</option>
                         })}
                     </select>
                     <div>
