@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios"
 import VarTilTable from "./VarTilTable";
+import { AuthContext } from "../AuthContext";
 
 function Varaajat() {
 
     const [nimi, setNimi] = useState("")
     const [varaajat, setVaraajat] = useState([])
+    const { auth } = useContext(AuthContext);
+    console.log(auth)
 
     const lisaa_varaaja = (event) => {
         event.preventDefault()
@@ -57,23 +60,29 @@ function Varaajat() {
     return (
         <>   
             <h2>Varaajat</h2>        
-            <section>
-                <form onSubmit={(event) => lisaa_varaaja(event)}>
-                    <label htmlFor="nimi">Nimi</label>
-                    <input 
-                        type="text"
-                        id="nimi"
-                        name="nimi"
-                        value={nimi}
-                        onChange={e => setNimi(e.target.value)}
-                        required
-                    />
-                    <input type="submit" value="Lisää varaaja" />
-                </form>
-            </section>
+            {auth?.user?.rooli === "admin" && (
+                <section>
+                    <form onSubmit={(event) => lisaa_varaaja(event)}>
+                        <label htmlFor="nimi">Nimi</label>
+                        <input 
+                            type="text"
+                            id="nimi"
+                            name="nimi"
+                            value={nimi}
+                            onChange={e => setNimi(e.target.value)}
+                            required
+                        />
+                        <input type="submit" value="Lisää varaaja" />
+                    </form>
+                </section>
+            )}
             
             <section>
-                {varaajat ? <VarTilTable items={varaajat} poistaItem={poistaVaraaja} /> : <p>Haetaan varaajia...</p>}
+                {varaajat ? (
+                    <VarTilTable 
+                        items={varaajat} 
+                        poistaItem={auth?.user?.rooli === "admin" ? poistaVaraaja : null} /> 
+                ) : <p>Haetaan varaajia...</p>}
             </section>
         </>
     );

@@ -180,7 +180,6 @@ class HttpRequests(SimpleHTTPRequestHandler):
             self.user = False
 
         connection = db_yhteys()
-        print(connection)
         cursor = connection.cursor(dictionary=True)
             
         # Kirjautuminen
@@ -193,17 +192,20 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 nimi = login_data.get("nimi")
                 salasana = login_data.get("salasana")
 
-                cursor.execute("SELECT * FROM kayttajat WHERE nimi = %s AND salasana = %s", (nimi, salasana,))
+                cursor.execute("SELECT nimi, rooli FROM kayttajat WHERE nimi = %s AND salasana = %s", (nimi, salasana,))
                 user = cursor.fetchone()
 
                 if user:
                     sid = self.generate_sid()
-                    sessions[sid] = {"username": nimi}
+                    sessions[sid] = {"nimi": user["nimi"], "rooli": user["rooli"]}
+                    print(sessions[sid])
                     self.send_response(200)
                     self._send_cors_headers()
-                    self.send_header("Set-Cookie", f"sid={sid}; SameSite=None; Secure")
+                    self.send_header("Set-Cookie", f"sid={sid}; SameSite=Lax")
                     self.end_headers()
-                    self.wfile.write(b"Logged In")
+
+                    response_data = json.dumps({"user": user, "sid": sid})
+                    self.wfile.write(response_data.encode("utf-8"))
                 else:
                     self.send_response(401)
                     self.end_headers()

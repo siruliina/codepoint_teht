@@ -1,5 +1,8 @@
-function VarTilTable({items, poistaItem}) {
+import { useContext } from "react";
+import { AuthContext } from "../AuthContext";
 
+function VarTilTable({items, poistaItem}) {
+    const { auth } = useContext(AuthContext);
 
     return (
         <table>
@@ -7,7 +10,7 @@ function VarTilTable({items, poistaItem}) {
                 <tr>
                     <th>ID</th>
                     <th>Nimi</th>
-                    <th></th>
+                    {auth?.user?.rooli === "admin" ? <th></th> : null }
                 </tr>
             </thead>
             <tbody>
@@ -15,11 +18,14 @@ function VarTilTable({items, poistaItem}) {
                     <tr key={item.id}>
                         <td>{item.id}</td>
                         <td>{item.tilan_nimi || item.nimi}</td>
-                        <td>
-                            <form onSubmit={(event) => poistaItem(event, item.id)}>
-                                <input type="submit" value="X" />
-                            </form>
-                        </td>
+                        {auth?.user?.rooli === "admin" ? (
+                            <td>
+                                <form onSubmit={(event) => poistaItem(event, item.id)}>
+                                    <input type="submit" value="X" />
+                                </form>
+                            </td>
+                        ) : null}
+                        
                     </tr>
                 ))
             }

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios"
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../AuthContext";
 
 function Login({setUser}) {
-
     const navigate = useNavigate()
+    const { setAuth } = useContext(AuthContext); 
 
     const [nimi, setNimi] = useState("")
     const [salasana, setSalasana] = useState("")
@@ -21,8 +22,11 @@ function Login({setUser}) {
         axios.post("http://localhost:8000/login", kayttaja, {withCredentials: true})
         .then((response) => {
             console.log(`Käyttäjä ${nimi} kirjattiin sisään onnistuneesti`)
-            setUser(true)
+            console.log(response.data)
+            const { user, sid } = response.data;
+            setAuth({ user, sid });
             navigate("/")
+            
         })
         .catch(error => {
             console.error("Virhe kirjautuessa sisään:", error)

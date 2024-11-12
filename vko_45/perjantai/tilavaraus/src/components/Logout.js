@@ -1,14 +1,17 @@
 import axios from "axios"
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../AuthContext";
 
-function Logout({setUser}) {
+function Logout() {
     const navigate = useNavigate();
+    const { setAuth } = useContext(AuthContext)
 
     const logout = () => {
         axios.delete("http://localhost:8000/logout", {withCredentials: true})
         .then((response) => {
             console.log("Käyttäjä kirjattiin ulos onnistuneesti")
-            setUser(false)
+            setAuth(null)
             navigate("/login");
         })
         .catch(error => {
