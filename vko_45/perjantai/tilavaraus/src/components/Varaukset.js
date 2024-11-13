@@ -1,14 +1,26 @@
 import { useState, useEffect } from "react";
 import axios from "axios"
 import { useForm } from "react-hook-form";
+import useGetApiData from "../hooks/useGetApiData";
 
 function Varaukset() {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const {
+        data: varauksetData,
+        loading: varauksetLoading, 
+        error: varauksetError, 
+        refetch: varauksetRefetch} = useGetApiData("http://localhost:8000/varaukset")
 
-    const [varaukset, setVaraukset] = useState([])
-    const [varaajat, setVaraajat] = useState([])
-    const [tilat, setTilat] = useState([])
+    const {
+        data: varaajatData,
+        loading: varaajatLoading,
+        error: varaajatError} = useGetApiData("http://localhost:8000/varaajat")
+
+    const {
+        data: tilatData,
+        loading: tilatLoading,
+        error: tilatError} = useGetApiData("http://localhost:8000/tilat")
 
     const lisaaVaraus = (data) => {
 
@@ -21,10 +33,7 @@ function Varaukset() {
         axios.post("http://localhost:8000/varaukset", varaus, { withCredentials: true })
         .then((response) => {
             console.log(`Varaus lisättiin onnistuneesti`)
-            return axios.get("http://localhost:8000/varaukset", { withCredentials: true });
-        })
-        .then((response) => {
-            setVaraukset(response.data)
+            varauksetRefetch()
         })
         .catch(error => {
             console.error("Virhe lisätessä varausta:", error)
@@ -37,25 +46,14 @@ function Varaukset() {
         axios.delete(`http://localhost:8000/varaukset/${id}`, { withCredentials: true })
         .then((response) => {
             console.log("Varaus poistettiin onnistuneesti")
-            return axios.get("http://localhost:8000/varaukset", { withCredentials: true });
-        })
-        .then((response) => {
-            setVaraukset(response.data)
+            varauksetRefetch()
         })
         .catch(error => {
             console.error("Virhe poistaessa varausta:", error)
         })
     }
 
-    useEffect(() => {
-        axios.get("http://localhost:8000/varaukset", {withCredentials: true})
-        .then((response) => {
-            console.log("Varaukset haettiin onnistuneesti")
-            setVaraukset(response.data)
-        })
-        .catch(error => {
-            console.error("Virhe hakiessa varauksia:", error)
-        })
+    /*useEffect(() => {
 
         axios.get("http://localhost:8000/varaajat", {withCredentials: true})
         .then((response) => {
@@ -74,7 +72,15 @@ function Varaukset() {
         .catch(error => {
             console.error("Virhe hakiessa tiloja:", error)
         })
-    }, [])
+    }, [])*/
+
+    if (varauksetLoading || varaajatLoading || tilatLoading) {
+        return <p>Ladataan...</p>
+    }
+
+    if (varauksetError || varaajatError || tilatError) {
+        return <p>Esiintyi virhe: {varauksetError || varaajatError || tilatError}</p>
+    }
 
     return (
         <>     
@@ -101,7 +107,7 @@ function Varaukset() {
                         {...register('varaaja', { required: "Tämä kenttä on pakollinen."})}
                     >
                         <option name="varaaja" value="" placeholder="Valitse varaaja">Valitse varaaja</option>
-                        {varaajat.map((varaaja) => {
+                        {varaajatData.map((varaaja) => {
                             return <option key={varaaja.id} name="varaaja" value={varaaja.id}>{varaaja.nimi}</option>
                         })}
                     </select>
@@ -116,7 +122,7 @@ function Varaukset() {
                         {...register('tila', { required: "Tämä kenttä on pakollinen."})}
                     >
                         <option name="tila" value="" placeholder="Valitse tila">Valitse tila</option>
-                        {tilat.map((tila) => {
+                        {tilatData.map((tila) => {
                             return <option key={tila.id} name="tila" value={tila.id}>{tila.tilan_nimi}</option>
                         })}
                     </select>
@@ -128,7 +134,7 @@ function Varaukset() {
             </section>
             
             <section>
-                {varaukset ? 
+                {varauksetData ? 
                 <table>
                     <thead>
                         <tr>
@@ -140,7 +146,7 @@ function Varaukset() {
                         </tr>
                     </thead>
                     <tbody>
-                        {varaukset.map((varaus) => {
+                        {varauksetData.map((varaus) => {
                             return <tr key={varaus.id}>
                                 <td>{varaus.id}</td>
                                 <td>{varaus.varauspaiva}</td>

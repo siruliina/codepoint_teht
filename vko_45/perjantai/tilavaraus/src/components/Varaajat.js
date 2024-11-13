@@ -1,15 +1,17 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import axios from "axios"
 import VarTilTable from "./VarTilTable";
 import { AuthContext } from "../AuthContext";
 import { useForm } from "react-hook-form"
+import useGetApiData from "../hooks/useGetApiData";
 
 function Varaajat() {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const [varaajat, setVaraajat] = useState([])
     const { auth } = useContext(AuthContext);
+    
+    const {data, loading, error, refetch} = useGetApiData("http://localhost:8000/varaajat")
 
     const lisaaVaraaja = (data) => {
 
@@ -20,10 +22,7 @@ function Varaajat() {
         axios.post("http://localhost:8000/varaajat", varaaja, { withCredentials: true })
         .then((response) => {
             console.log(`Varaaja ${data.nimi} lisättiin onnistuneesti`)
-            return axios.get("http://localhost:8000/varaajat", { withCredentials: true });
-        })
-        .then((response) => {
-            setVaraajat(response.data)
+            refetch()
         })
         .catch(error => {
             console.error("Virhe lisätessä varaajaa:", error)
@@ -36,26 +35,15 @@ function Varaajat() {
         axios.delete(`http://localhost:8000/varaajat/${id}`, { withCredentials: true })
         .then((response) => {
             console.log("Varaaja poistettiin onnistuneesti")
-            return axios.get("http://localhost:8000/varaajat", { withCredentials: true });
-        })
-        .then((response) => {
-            setVaraajat(response.data)
+            refetch()
         })
         .catch(error => {
             console.error("Virhe poistaessa varaajaa:", error)
         })
     }
 
-    useEffect(() => {
-        axios.get("http://localhost:8000/varaajat", {withCredentials: true})
-        .then((response) => {
-            console.log("Varaajat haettiin onnistuneesti")
-            setVaraajat(response.data)
-        })
-        .catch(error => {
-            console.error("Virhe hakiessa varaajia:", error)
-        })
-    }, [])
+    if (loading) return <p>Ladataan...</p>;
+    if (error) return <p>Virhe: {error}</p>;
 
     return (
         <>   
@@ -86,9 +74,9 @@ function Varaajat() {
             )}
             
             <section>
-                {varaajat ? (
+                {data ? (
                     <VarTilTable 
-                        items={varaajat} 
+                        items={data} 
                         poistaItem={auth?.user?.rooli === "admin" ? poistaVaraaja : null} /> 
                 ) : <p>Haetaan varaajia...</p>}
             </section>

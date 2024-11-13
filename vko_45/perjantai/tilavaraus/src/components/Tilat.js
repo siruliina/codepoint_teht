@@ -1,15 +1,15 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import axios from "axios"
 import VarTilTable from "./VarTilTable";
 import { AuthContext } from "../AuthContext";
 import { useForm } from "react-hook-form"
+import useGetApiData from "../hooks/useGetApiData";
 
 function Tilat() {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
-
-    const [tilat, setTilat] = useState([])
     const { auth } = useContext(AuthContext);
+    const {data, loading, error, refetch} = useGetApiData("http://localhost:8000/tilat");
 
     const lisaaTila = (data) => {
 
@@ -20,10 +20,7 @@ function Tilat() {
         axios.post("http://localhost:8000/tilat", tila, {withCredentials: true})
         .then((response) => {
             console.log(`Tila ${data.nimi} lisättiin onnistuneesti`)
-            return axios.get("http://localhost:8000/tilat", { withCredentials: true });
-        })
-        .then((response) => {
-            setTilat(response.data)
+            refetch()
         })
         .catch(error => {
             console.error("Virhe lisätessä tilaa:", error)
@@ -36,26 +33,19 @@ function Tilat() {
         axios.delete(`http://localhost:8000/tilat/${id}`, { withCredentials: true })
         .then((response) => {
             console.log("Tila poistettiin onnistuneesti")
-            return axios.get("http://localhost:8000/tilat", { withCredentials: true });
-        })
-        .then((response) => {
-            setTilat(response.data)
+            refetch()
         })
         .catch(error => {
             console.error("Virhe poistaessa tilaa:", error)
         })
     }
 
-    useEffect(() => {
-        axios.get("http://localhost:8000/tilat", {withCredentials: true})
-        .then((response) => {
-            console.log("Tilat haettiin onnistuneesti")
-            setTilat(response.data)
-        })
-        .catch(error => {
-            console.error("Virhe hakiessa tiloja:", error)
-        })
-    }, [])
+    if (loading) {
+        return <p>Ladataan...</p>
+    }
+    if (error) {
+        return <p>Virhe: {error}</p>
+    }
 
     return (
         <>
@@ -86,9 +76,9 @@ function Tilat() {
             )}
 
             <section>
-                {tilat ? (
+                {data ? (
                     <VarTilTable 
-                        items={tilat}
+                        items={data}
                         poistaItem={auth?.user?.rooli === "admin" ? poistaTila : null }
                     />) : <p>Haetaan tiloja...</p>}                
             </section>
