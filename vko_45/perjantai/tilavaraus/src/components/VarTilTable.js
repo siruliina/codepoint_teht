@@ -1,36 +1,47 @@
 import { useContext } from "react";
 import { AuthContext } from "../AuthContext";
+import TableContainer from "@mui/material/TableContainer";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function VarTilTable({items, poistaItem}) {
     const { auth } = useContext(AuthContext);
 
     return (
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nimi</th>
-                    {auth?.user?.rooli === "admin" ? <th></th> : null }
-                </tr>
-            </thead>
-            <tbody>
-            {items.map((item, index) => (
-                    <tr key={item.id}>
-                        <td>{item.id}</td>
-                        <td>{item.tilan_nimi || item.nimi}</td>
-                        {auth?.user?.rooli === "admin" ? (
-                            <td>
-                                <form onSubmit={(event) => poistaItem(event, item.id)}>
-                                    <input type="submit" value="X" />
-                                </form>
-                            </td>
-                        ) : null}
-                        
-                    </tr>
-                ))
-            }
-            </tbody>
-        </table>
+        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <TableContainer sx={{ maxHeight: 440 }}>
+                <Table stickyHeader>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>ID</TableCell>
+                            <TableCell>Nimi</TableCell>
+                            {auth?.user?.rooli === "admin" ? <TableCell>Poista</TableCell> : null }
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {items.map((item, index) => (
+                            <TableRow key={item.id}>
+                                <TableCell>{item.id}</TableCell>
+                                <TableCell>{item.tilan_nimi || item.nimi}</TableCell>
+                                {auth?.user?.rooli === "admin" ? (
+                                    <TableCell>
+                                        <Button variant="contained" onClick={() => poistaItem(item.id)}><DeleteIcon /></Button>
+                                    </TableCell>
+                                ) : null}
+                                
+                            </TableRow>
+                        ))
+                    }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Paper>
     )
 }
   

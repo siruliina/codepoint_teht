@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import { Link } from "react-router-dom";
+import { Box, Container, AppBar, Button, Toolbar, Typography } from "@mui/material";
 
 function Navbar() {
 
@@ -9,17 +10,35 @@ function Navbar() {
     return (
         <>
             {auth ? (
-                <nav>
-                    <Link to="/">Etusivu</Link>
-                    <Link to="/varaajat">Varaajat</Link>
-                    <Link to="/tilat">Tilat</Link>
-                    <Link to="/varaukset">Varaukset</Link>
-                    <Link to="/logout">Kirjaudu ulos</Link>
-                </nav>
+                <AppBar position="static" sx={{marginBottom: "20px"}}>
+                    <Container maxWidth="xl">
+                    <Toolbar>
+                        <Typography variant="h1" sx={{ flexGrow: 1, fontSize: "24px" }}>
+                            TILANVARAUS
+                        </Typography>
+                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                            <Button color="inherit" component={Link} to="/">Etusivu</Button>
+                            <Button color="inherit" component={Link} to="/varaajat">Varaajat</Button>
+                            <Button color="inherit" component={Link} to="/tilat">Tilat</Button>
+                            <Button color="inherit" component={Link} to="/varaukset">Varaukset</Button>
+                            <Button color="inherit" component={Link} to="/logout">Kirjaudu ulos</Button>
+                        </Box>
+                    </Toolbar>
+                    </Container>
+                </AppBar>
             ) : (
-                <nav>
-                    <Link to="/login">Kirjaudu sisään</Link>
-                </nav>
+                <AppBar position="static" sx={{marginBottom: "20px"}}>
+                    <Container maxWidth="xl">
+                        <Toolbar>
+                            <Typography variant="h1" sx={{ flexGrow: 1, fontSize: "24px" }}>
+                                TILANVARAUS
+                            </Typography>
+                            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                                <Button color="inherit" component={Link} to="/login">Kirjaudu sisään</Button>
+                            </Box>
+                        </Toolbar>
+                    </Container>
+                </AppBar>
             )}
         </>
     )

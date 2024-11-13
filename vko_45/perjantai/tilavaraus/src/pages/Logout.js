@@ -2,6 +2,8 @@ import axios from "axios"
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 function Logout() {
     const navigate = useNavigate();
@@ -20,9 +22,9 @@ function Logout() {
     }
 
     return (
-        <div>
-            <button onClick={logout}>Kirjaudu ulos</button>
-        </div>
+        <Box component="section">
+            <Button variant="contained" onClick={logout}>Kirjaudu ulos</Button>
+        </Box>
     );
 }
   

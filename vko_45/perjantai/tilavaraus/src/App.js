@@ -2,6 +2,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./AuthContext";
 import Navbar from "./components/Navbar";
 import Router from "./Router";
+import { Typography } from "@mui/material";
 
 function App() {
 
@@ -10,7 +11,7 @@ function App() {
             <BrowserRouter>
                 <header>                    
                     <Navbar />
-                    <h1>Tilanvarausjärjestelmä</h1>
+                    <Typography variant="h1" gutterBottom align="center" sx={{ fontSize: "44px" }}>Tilanvarausjärjestelmä</Typography>
                 </header>
                 <Router />
             </BrowserRouter>

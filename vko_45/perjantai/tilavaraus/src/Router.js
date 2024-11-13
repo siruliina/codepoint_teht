@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import { AuthContext } from "./AuthContext";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Etusivu from "./components/Etusivu";
-import Varaajat from "./components/Varaajat";
-import Tilat from "./components/Tilat";
-import Varaukset from "./components/Varaukset";
-import Logout from "./components/Logout";
-import Login from "./components/Login";
+import Etusivu from "./pages/Etusivu";
+import Varaajat from "./pages/Varaajat";
+import Tilat from "./pages/Tilat";
+import Varaukset from "./pages/Varaukset";
+import Logout from "./pages/Logout";
+import Login from "./pages/Login";
 
 const Router = () => {
     const { auth } = useContext(AuthContext);
