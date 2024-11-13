@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tilat</title>
+    <script defer src="./node_modules/axios/dist/axios.min.js"></script>
+    <script defer src="index.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">Etusivu</a>
+            <a href="varaajat.html">Varaajat</a>
+            <a href="tilat.html">Tilat</a>
+            <a href="varaukset.html">Varaukset</a>
+            <a href="login.html">Kirjaudu sisään</a>
+        </nav>
+        <h1>Tilanvarausjärjestelmä</h1>
+    </header>
+
+    <h2>Tilat</h2>
+
+    <section>
+        <div class="form-div">
+            <h3>Lisää tila</h3>
+            <form onsubmit="addTila(event)" id="tila-form">
+                <label for="tilan_nimi">Nimi</label>
+                <input type="text" id="tilan_nimi" name="tilan_nimi" required/>
+                <input type="submit" value="Lisää"/>
+            </form>
+        </div>
+    </section>
+
+    <section>
+        <h3>Kaikki tilat</h3>
+        <table id="tila-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nimi</th>
+                    <th>Poista</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </section>
+</body>
+</html>

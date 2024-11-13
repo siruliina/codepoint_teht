@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Varaukset</title>
+    <script defer src="./node_modules/axios/dist/axios.min.js"></script>
+    <script defer src="index.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">Etusivu</a>
+            <a href="varaajat.html">Varaajat</a>
+            <a href="tilat.html">Tilat</a>
+            <a href="varaukset.html">Varaukset</a>
+            <a href="login.html">Kirjaudu sisään</a>
+        </nav>
+        <h1>Tilanvarausjärjestelmä</h1>
+    </header>
+
+    <h2>Varaukset</h2>
+
+    <section>
+        <div class="form-div">
+            <h3>Lisää varaus</h3>
+            <form id="varaus-form" onsubmit="addVaraus(event)">
+                <label for="varauspaiva">Varauspäivä</label>
+                <input type="date" id="varauspaiva" name="varauspaiva" required/>
+                <label for="varaajat-dropdown">Varaaja</label>
+                <select name="varaaja" id="varaajat-dropdown" required>
+                </select>
+                <label for="tilat-dropdown">Tila</label>
+                <select name="tila" id="tilat-dropdown" required>
+                </select>
+                <input type="submit" value="Lisää"/>
+            </form>
+        </div>
+    </section>
+
+    <section>
+        <h3>Kaikki varaukset</h3>
+        <table id="varaus-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Varauspaiva</th>
+                    <th>Varaaja</th>
+                    <th>Tila</th>
+                    <th>Poista</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </section>
+</body>
+</html>
