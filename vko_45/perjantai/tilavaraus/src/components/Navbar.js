@@ -33,9 +33,6 @@ function Navbar() {
                             <Typography variant="h1" sx={{ flexGrow: 1, fontSize: "24px" }}>
                                 TILANVARAUS
                             </Typography>
-                            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                                <Button color="inherit" component={Link} to="/login">Kirjaudu sisään</Button>
-                            </Box>
                         </Toolbar>
                     </Container>
                 </AppBar>

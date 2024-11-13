@@ -12,7 +12,6 @@ import Button from "@mui/material/Button";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid2";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
@@ -72,11 +71,11 @@ function Varaukset() {
     }
 
     if (varauksetLoading || varaajatLoading || tilatLoading) {
-        return <p>Ladataan...</p>
+        return <Typography variant="body2">Ladataan...</Typography>
     }
 
     if (varauksetError || varaajatError || tilatError) {
-        return <p>Esiintyi virhe: {varauksetError || varaajatError || tilatError}</p>
+        return <Typography variant="body2">Esiintyi virhe: {varauksetError || varaajatError || tilatError}</Typography>
     }
 
     return (
@@ -89,7 +88,7 @@ function Varaukset() {
                         <TextField
                             type="date"
                             id="varauspaiva"
-                            label="Varauspaiva"  // labelin tekstiksi määritellään 'Varauspaiva'
+                            label="Varauspaiva"
                             {...register('varauspaiva', {
                                 required: "Tämä kenttä on pakollinen.",
                                 valueAsDate: true
@@ -102,7 +101,7 @@ function Varaukset() {
                         />
                     </FormControl>
                     <div>
-                        {errors.varauspaiva && <span>{errors.varauspaiva.message}</span>}
+                        {errors.varauspaiva && <Typography variant="body2">{errors.varauspaiva.message}</Typography>}
                     </div><br/>
 
                     <FormControl fullWidth error={!!errors.varaaja}>
@@ -120,7 +119,7 @@ function Varaukset() {
                         </Select>
                     </FormControl>
                     <div>
-                        {errors.varaaja && <span>{errors.varaaja.message}</span>}
+                        {errors.varaaja && <Typography variant="body2">{errors.varaaja.message}</Typography>}
                     </div><br/>
 
                     <FormControl fullWidth error={!!errors.tila}>
@@ -137,14 +136,10 @@ function Varaukset() {
                             })}
                         </Select>
                     </FormControl>
-                    <div>
-                        {errors.tila && <span>{errors.tila.message}</span>}
-                    </div><br/>
+                    
+                    {errors.tila && <Typography variant="body2">{errors.tila.message}</Typography>}<br/>
 
-                    <Grid container sx={{ marginTop: 2 }}>
-                        <Button type="submit" variant="contained" sx={{ margin: 0 }}>Lisää varaus</Button>
-                    </Grid>
-
+                    <Button type="submit" variant="contained" sx={{ marginTop: 2 }}>Lisää varaus</Button>
                 </Box>
             </Box>
             
@@ -181,7 +176,7 @@ function Varaukset() {
                         </Table> 
                     </TableContainer>
                 </Paper>
-                : <p>Haetaan varauksia...</p>
+                : <Typography variant="body2">Haetaan varauksia...</Typography>
                 }
             </Box>
         </>

@@ -8,7 +8,6 @@ import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
 function Tilat() {
@@ -46,10 +45,10 @@ function Tilat() {
     }
 
     if (loading) {
-        return <p>Ladataan...</p>
+        return <Typography variant="body2">Ladataan...</Typography>
     }
     if (error) {
-        return <p>Virhe: {error}</p>
+        return <Typography variant="body2">Virhe: {error}</Typography>
     }
 
     return (
@@ -62,6 +61,7 @@ function Tilat() {
                             <TextField
                                 id="nimi"
                                 label="Nimi"
+                                name="nimi"
                                 {...register('nimi', { 
                                     required: "Tämä kenttä on pakollinen.",
                                     minLength: {
@@ -75,10 +75,9 @@ function Tilat() {
                                 })}
                             />
                         </FormControl>
-                        {errors.nimi && <span>{errors.nimi.message}</span>}
-                        <Grid container sx={{ marginTop: 2 }}>
-                            <Button type="submit" variant="contained" >Lisää tila</Button>
-                        </Grid>
+                        {errors.nimi && <Typography variant="body2">{errors.nimi.message}</Typography>}<br/>
+                        
+                        <Button type="submit" variant="contained" sx={{ marginTop: 2 }}>Lisää tila</Button>
                     </Box>
                 </Box>
             )}
@@ -88,7 +87,7 @@ function Tilat() {
                     <VarTilTable 
                         items={data}
                         poistaItem={auth?.user?.rooli === "admin" ? poistaTila : null }
-                    />) : <p>Haetaan tiloja...</p>}                
+                    />) : <Typography variant="body2">Haetaan tiloja...</Typography>}                
             </Box>
         </>
     )

@@ -3,6 +3,7 @@ import axios from "axios"
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 import { useForm } from "react-hook-form"
+import { FormControl, Button, Box, TextField, Typography } from "@mui/material";
 
 function Login() {
 
@@ -33,33 +34,37 @@ function Login() {
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit(login)}>
-                <label htmlFor="nimi">Nimi</label>
-                <input 
-                    type="text"
-                    id="nimi"
-                    {...register('nimi', { required: "Tämä kenttä on pakollinen."})}
-                />
+        <>
+            <Typography variant="h2" gutterBottom align="center" sx={{ fontSize: "34px" }}>Kirjaudu sisään</Typography>
+            <Box component="form" onSubmit={handleSubmit(login)}>
+                <FormControl fullWidth error={!!errors.nimi}>
+                    <TextField 
+                        type="text"
+                        id="nimi"
+                        label="Nimi"
+                        {...register('nimi', { required: "Tämä kenttä on pakollinen."})}
+                    />
+                </FormControl>
+
                 <div>
-                    {errors.nimi && <span>{errors.nimi.message}</span>}
+                    {errors.nimi && <Typography variant="body2">{errors.nimi.message}</Typography>}
                 </div><br/>
 
-                <label htmlFor="salasana">Salasana</label>
-                <input 
-                    type="password" 
-                    id="salasana" 
-                    {...register('salasana', { required: "Tämä kenttä on pakollinen."})}
-                />
-                <div>
-                    {errors.nimi && <span>{errors.nimi.message}</span>}
-                </div>
+                <FormControl fullWidth error={!!errors.salasana}>
+                    <TextField 
+                        type="password" 
+                        id="salasana"
+                        label="Salasana"
+                        {...register('salasana', { required: "Tämä kenttä on pakollinen."})}
+                    />
+                </FormControl>
+                {errors.salasana && <Typography variant="body2">{errors.salasana.message}</Typography>}<br/>
                 
-                <p id="error-message"></p>
+                <Typography variant="body2" id="error-message"></Typography>
 
-                <input type="submit" value="Kirjaudu sisään" />
-            </form>
-        </div>
+                <Button type="submit" variant="contained" sx={{ marginTop: 2 }}>Kirjaudu sisään</Button>
+            </Box>
+        </>
     );
 }
   

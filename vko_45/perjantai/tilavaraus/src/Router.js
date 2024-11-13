@@ -25,6 +25,7 @@ const Router = () => {
                         <Route path="/tilat" element={<Tilat />} />
                         <Route path="/varaukset" element={<Varaukset />} />
                         <Route path="/logout" element={<Logout />} />
+                        <Route path="*" element={<Navigate to="/" />} />
                     </>
                 ) : (
                     <Route path="*" element={<Navigate to="/login" />} />

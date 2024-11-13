@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid2";
 import FormControl from "@mui/material/FormControl";
 
 function Varaajat() {
@@ -47,8 +46,8 @@ function Varaajat() {
         })
     }
 
-    if (loading) return <p>Ladataan...</p>;
-    if (error) return <p>Virhe: {error}</p>;
+    if (loading) return <Typography variant="body2">Ladataan...</Typography>;
+    if (error) return <Typography variant="body2">Virhe: {error}</Typography>;
 
     return (
         <>   
@@ -61,6 +60,7 @@ function Varaajat() {
                             <TextField
                                 id="nimi"
                                 label="Nimi"
+                                name="nimi"
                                 {...register('nimi', { 
                                     required: "Tämä kenttä on pakollinen.", 
                                     minLength: {
@@ -74,10 +74,9 @@ function Varaajat() {
                                 })}
                             />
                         </FormControl>
-                        {errors.nimi && <span>{errors.nimi.message}</span>}
-                        <Grid container sx={{ marginTop: 2 }}>
-                            <Button type="submit" variant="contained" >Lisää varaaja</Button>
-                        </Grid>
+                        {errors.nimi && <Typography variant="body2">{errors.nimi.message}</Typography>}<br/>
+
+                        <Button type="submit" variant="contained" sx={{ marginTop: 2 }}>Lisää varaaja</Button>
                     </Box>
                 </Box>
             )}
@@ -87,7 +86,7 @@ function Varaajat() {
                     <VarTilTable 
                         items={data} 
                         poistaItem={auth?.user?.rooli === "admin" ? poistaVaraaja : null} /> 
-                ) : <p>Haetaan varaajia...</p>}
+                ) : <Typography variant="body2">Haetaan varaajia...</Typography>}
             </Box>
         </>
     );
