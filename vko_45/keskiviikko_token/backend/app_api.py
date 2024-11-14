@@ -3,8 +3,8 @@ import mysql.connector
 import urllib.parse
 import json
 from random import randint
-
-sessions = {}
+import jwt
+from datetime import datetime, timedelta
 
 # Yhteys tietokantaan funktio
 def db_yhteys():
@@ -16,15 +16,35 @@ def db_yhteys():
     )
     return connection
 
+SECRET_KEY = "salainenavain"
+
+def create_jwt_token(payload):
+    secret_key = SECRET_KEY
+    algorithm = 'HS256'
+    token = jwt.encode(payload, secret_key, algorithm=algorithm)
+    return token
+
+def validate_jwt_token(token_to_validate):
+    secret_key = SECRET_KEY
+    algorithm = 'HS256'
+    try:
+        decoded_payload = jwt.decode(token_to_validate, secret_key, algorithms=[algorithm])
+        return decoded_payload
+    except jwt.ExpiredSignatureError:
+        print("Token has expired. Please log in again.")
+    except jwt.InvalidTokenError:
+        print("Invalid token. Access denied.")
+    return None
+
 # HttpRequests on luokka, joka perii SimpleHTTPRequestHandler joka löytyy Pythonin standardikirjaston http.server-moduulista
 # SimpleHTTPRequestHandler tarjoaa metodeja HTTP pyyntöjen käsittelyyn
 class HttpRequests(SimpleHTTPRequestHandler):
 
     def _send_cors_headers(self):
-        self.send_header('Access-Control-Allow-Origin', 'http://localhost:3000')
-        self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE')
-        self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, X-API-Key, Content-Type')
-        self.send_header('Access-Control-Allow-Credentials', 'true')
+        self.send_header("Access-Control-Allow-Origin", "http://localhost:3000")
+        self.send_header("Access-Control-Allow-Methods", "GET,POST,OPTIONS,DELETE")
+        self.send_header("Access-Control-Allow-Headers", "X-Requested-With, X-API-Key, Content-Type")
+        self.send_header("Access-Control-Allow-Credentials", "true")
 
     def do_OPTIONS(self):
         # Käsitellään preflight-OPTIONS-pyyntö
@@ -34,8 +54,9 @@ class HttpRequests(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         cookies = self.parse_cookies(self.headers.get("Cookie"))
-        if "sid" in cookies:
-            self.user = cookies["sid"] if (cookies["sid"] in sessions) else False
+        if "token" in cookies:
+            self.user = validate_jwt_token(cookies["token"])
+            print(self.user)
         else:
             self.user = False
 
@@ -174,8 +195,9 @@ class HttpRequests(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         cookies = self.parse_cookies(self.headers.get("Cookie"))
-        if "sid" in cookies:
-            self.user = cookies["sid"] if (cookies["sid"] in sessions) else False
+        if "token" in cookies:
+            self.user = validate_jwt_token(cookies["token"])
+            print(self.user)
         else:
             self.user = False
 
@@ -192,19 +214,24 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 nimi = login_data.get("nimi")
                 salasana = login_data.get("salasana")
 
-                cursor.execute("SELECT nimi, rooli FROM kayttajat WHERE nimi = %s AND salasana = %s", (nimi, salasana,))
+                cursor.execute("SELECT tunnus, nimi, rooli FROM kayttajat WHERE nimi = %s AND salasana = %s", (nimi, salasana,))
                 user = cursor.fetchone()
 
                 if user:
-                    sid = self.generate_sid()
-                    sessions[sid] = {"nimi": user["nimi"], "rooli": user["rooli"]}
-                    print(sessions[sid])
+                    token = create_jwt_token({
+                        "tunnus": user["tunnus"],
+                        "nimi": user["nimi"],
+                        "rooli": user["rooli"],
+                        "exp": datetime.utcnow() + timedelta(hours=1)
+                    })
+                    #sessions[token] = {"nimi": user["nimi"], "rooli": user["rooli"]}
+                    #print(sessions[sid])
                     self.send_response(200)
                     self._send_cors_headers()
-                    self.send_header("Set-Cookie", f"sid={sid}; SameSite=Lax")
+                    self.send_header("Set-Cookie", f"token={token}; HttpOnly; SameSite=Lax")
                     self.end_headers()
 
-                    response_data = json.dumps({"user": user, "sid": sid})
+                    response_data = json.dumps({"user": user, "token": token})
                     self.wfile.write(response_data.encode("utf-8"))
                 else:
                     self.send_response(401)
@@ -313,8 +340,8 @@ class HttpRequests(SimpleHTTPRequestHandler):
 
     def do_DELETE(self):
         cookies = self.parse_cookies(self.headers.get("Cookie"))
-        if "sid" in cookies:
-            self.user = cookies["sid"] if (cookies["sid"] in sessions) else False
+        if "token" in cookies:
+            self.user = validate_jwt_token(cookies["token"])
             print(self.user)
         else:
             self.user = False
@@ -329,10 +356,9 @@ class HttpRequests(SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b"Not logged in")
             else:
-                del sessions[self.user]
                 self.send_response(200)
                 self._send_cors_headers()
-                self.send_header("Set-Cookie", "sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure")
+                self.send_header("Set-Cookie", "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax;")
                 self.end_headers()
                 self.wfile.write(b"Logged Out")
 
@@ -383,10 +409,6 @@ class HttpRequests(SimpleHTTPRequestHandler):
     
         cursor.close()
         connection.close()
-
-    # Apumetodi istunto-ID:n luomiseen
-    def generate_sid(self):
-        return "".join(str(randint(1,9)) for _ in range(30))
 
     # Apumetodi evästeiden käsittelyyn
     def parse_cookies(self, cookie_list):
