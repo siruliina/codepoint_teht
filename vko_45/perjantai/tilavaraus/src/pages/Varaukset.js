@@ -1,12 +1,6 @@
 import axios from "axios"
 import { useForm } from "react-hook-form";
 import useGetApiData from "../hooks/useGetApiData";
-import TableContainer from "@mui/material/TableContainer";
-import Table from "@mui/material/Table";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,6 +11,7 @@ import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import { Table, TableHead, TableBody, TableRow, TableCell } from "../components/TableComponents";
 
 function Varaukset() {
 
@@ -146,9 +141,7 @@ function Varaukset() {
             <Box component="section" sx={{ marginTop: 2 }}>
                 {varauksetData ? 
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                    <TableContainer sx={{ maxHeight: 400 }}>
                         <Table stickyHeader>
-
                             <TableHead>
                                 <TableRow>
                                     <TableCell>ID</TableCell>
@@ -172,9 +165,7 @@ function Varaukset() {
                                     </TableRow>
                                 })}
                             </TableBody>
-
-                        </Table> 
-                    </TableContainer>
+                        </Table>
                 </Paper>
                 : <Typography variant="body2">Haetaan varauksia...</Typography>
                 }

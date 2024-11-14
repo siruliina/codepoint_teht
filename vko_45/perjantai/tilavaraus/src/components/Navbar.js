@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import { Link } from "react-router-dom";
-import { Box, Container, AppBar, Button, Toolbar, Typography } from "@mui/material";
+import { Box, AppBar, Button, Toolbar, Typography } from "@mui/material";
+import GroupsIcon from '@mui/icons-material/Groups';
 
 function Navbar() {
 
@@ -10,9 +11,10 @@ function Navbar() {
     return (
         <>
             {auth ? (
+                <Box sx={{ flexGrow: 1 }}>
                 <AppBar position="static" sx={{marginBottom: "20px"}}>
-                    <Container maxWidth="xl">
                     <Toolbar>
+                        <GroupsIcon sx={{ flexGrow: 1, fontSize: "24px", marginRight: "-30px" }}/>
                         <Typography variant="h1" sx={{ flexGrow: 1, fontSize: "24px" }}>
                             TILANVARAUS
                         </Typography>
@@ -24,17 +26,15 @@ function Navbar() {
                             <Button color="inherit" component={Link} to="/logout">Kirjaudu ulos</Button>
                         </Box>
                     </Toolbar>
-                    </Container>
                 </AppBar>
+                </Box>
             ) : (
                 <AppBar position="static" sx={{marginBottom: "20px"}}>
-                    <Container maxWidth="xl">
-                        <Toolbar>
-                            <Typography variant="h1" sx={{ flexGrow: 1, fontSize: "24px" }}>
-                                TILANVARAUS
-                            </Typography>
-                        </Toolbar>
-                    </Container>
+                    <Toolbar>
+                        <Typography variant="h1" sx={{ flexGrow: 1, fontSize: "24px" }}>
+                            TILANVARAUS
+                        </Typography>
+                    </Toolbar>
                 </AppBar>
             )}
         </>
